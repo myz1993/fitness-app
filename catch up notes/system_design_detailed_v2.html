@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; padding: 12px; font-size: 13px; color: #1f2937; }
+
+h1 { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+.subtitle { color: #6b7280; font-size: 12px; margin-bottom: 16px; }
+
+/* NAV */
+.nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.nav button { padding: 5px 12px; border-radius: 20px; border: 1.5px solid #d1d5db; background: #fff; cursor: pointer; font-size: 12px; font-weight: 500; color: #374151; transition: all 0.15s; }
+.nav button:hover, .nav button.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+
+/* PHASE HEADER */
+.phase-header { padding: 10px 16px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
+.phase1-header { background: #1e3a5f; color: #fff; }
+.phase2-header { background: #1a1a2e; color: #fff; }
+
+/* PHASE 1 */
+.p1-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+
+.p1-card { border-radius: 10px; border: 1.5px solid; overflow: hidden; }
+.p1-card-header { padding: 10px 14px; font-weight: 700; font-size: 13px; }
+.p1-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+
+.sc-card { border-color: #0d9488; }
+.sc-card .p1-card-header { background: #0d9488; color: #fff; }
+.cap-card { border-color: #7c3aed; }
+.cap-card .p1-card-header { background: #7c3aed; color: #fff; }
+.lat-card { border-color: #dc2626; }
+.lat-card .p1-card-header { background: #dc2626; color: #fff; }
+
+.section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; margin-bottom: 3px; }
+
+ul.blist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+ul.blist li { padding-left: 14px; position: relative; font-size: 12px; line-height: 1.5; color: #374151; }
+ul.blist li::before { content: "•"; position: absolute; left: 2px; color: #9ca3af; }
+ul.blist li strong { color: #111827; }
+
+.tag { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; margin-right: 3px; }
+.tag-problem { background: #fee2e2; color: #991b1b; }
+.tag-solve { background: #d1fae5; color: #065f46; }
+.tag-estimate { background: #dbeafe; color: #1e40af; }
+
+/* PHASE 1 → PHASE 2 BRIDGE */
+.bridge { background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; font-size: 12px; }
+.bridge-title { font-weight: 700; color: #475569; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+.bridge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.bridge-item { background: #fff; border-radius: 6px; padding: 7px 10px; border: 1px solid #e2e8f0; }
+.bridge-item .prob { font-size: 11px; color: #dc2626; font-weight: 600; margin-bottom: 2px; }
+.bridge-item .sol { font-size: 11px; color: #0d9488; }
+
+/* PHASE 2 */
+.p2-layer { border-radius: 10px; border: 1.5px solid; margin-bottom: 14px; overflow: hidden; }
+.p2-layer-header { padding: 9px 14px; font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+.p2-layer-body { padding: 12px 14px; background: #fff; }
+.p2-tools-grid { display: grid; gap: 10px; }
+.cols2 { grid-template-columns: repeat(2, 1fr); }
+.cols3 { grid-template-columns: repeat(3, 1fr); }
+.cols4 { grid-template-columns: repeat(4, 1fr); }
+
+.tool-card { border-radius: 8px; border: 1px solid #e5e7eb; padding: 10px 12px; background: #fafafa; }
+.tool-name { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+.tool-tagline { font-size: 11px; color: #6b7280; margin-bottom: 8px; }
+.tool-section { margin-top: 6px; }
+
+/* Layer colors */
+.traffic-layer { border-color: #0369a1; }
+.traffic-layer .p2-layer-header { background: #0369a1; color: #fff; }
+.cache-layer { border-color: #7c3aed; }
+.cache-layer .p2-layer-header { background: #7c3aed; color: #fff; }
+.security-layer { border-color: #b45309; }
+.security-layer .p2-layer-header { background: #b45309; color: #fff; }
+.db-layer { border-color: #dc2626; }
+.db-layer .p2-layer-header { background: #dc2626; color: #fff; }
+.mq-layer { border-color: #d97706; }
+.mq-layer .p2-layer-header { background: #d97706; color: #fff; }
+
+.solve-badge { background: rgba(255,255,255,0.25); border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 500; }
+
+.tradeoff { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 5px 8px; border-radius: 0 4px 4px 0; margin-top: 4px; }
+.tradeoff-label { font-size: 10px; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 0.05em; }
+.tradeoff-text { font-size: 11px; color: #78350f; line-height: 1.4; }
+
+.vs-row { display: flex; gap: 6px; margin-top: 6px; }
+.vs-item { flex: 1; border-radius: 5px; padding: 5px 7px; font-size: 11px; }
+.vs-pro { background: #d1fae5; color: #065f46; }
+.vs-con { background: #fee2e2; color: #991b1b; }
+.vs-label { font-weight: 700; font-size: 10px; margin-bottom: 2px; }
+
+.divider { height: 1px; background: #f3f4f6; margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<h1>System Design · Complete Knowledge Map</h1>
+<p class="subtitle">Phase 1: Foundations · Phase 2: Core Tools & Trade-offs · Arrows show which Phase 1 problem each layer solves</p>
+
+<div class="nav">
+  <button class="active" onclick="show('all')">All</button>
+  <button onclick="show('p1')">Phase 1 · Foundations</button>
+  <button onclick="show('traffic')">Traffic Layer</button>
+  <button onclick="show('cache')">Cache Layer</button>
+  <button onclick="show('security')">Security Layer</button>
+  <button onclick="show('db')">Database Layer</button>
+  <button onclick="show('mq')">Messaging Layer</button>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PHASE 1 -->
+<!-- ═══════════════════════════════════════ -->
+<div id="sec-p1">
+<div class="phase-header phase1-header">⬡ Phase 1 · Foundations — Core Problems Every System Faces</div>
+
+<div class="p1-grid">
+
+  <!-- SCALABILITY -->
+  <div class="p1-card sc-card">
+    <div class="p1-card-header">📈 Scalability</div>
+    <div class="p1-card-body">
+
+      <div>
+        <div class="section-label">The Problem</div>
+        <ul class="blist">
+          <li>Single server handles <strong>1K–10K req/s</strong> max</li>
+          <li>Traffic grows → CPU/RAM maxes out → crashes</li>
+          <li>One machine fails → entire system down (SPOF)</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">How to Estimate Scale</div>
+        <ul class="blist">
+          <li><strong>DAU × actions/day ÷ 86,400</strong> = avg QPS</li>
+          <li>Peak = avg × 2–5× (traffic spikes)</li>
+          <li>1M DAU, 10 req/day → <strong>~120 QPS avg</strong></li>
+          <li>Storage: records/day × bytes × retention days</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">Solutions</div>
+        <ul class="blist">
+          <li><strong>Vertical Scaling</strong> — bigger machine, simple but has ceiling & no redundancy</li>
+          <li><strong>Horizontal Scaling</strong> — add more machines, requires stateless services</li>
+          <li><strong>Stateless design</strong> — store session in Redis not in-process</li>
+          <li><strong>Auto-scaling</strong> — add/remove machines based on CPU/RPS metrics</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">Key Numbers to Memorise</div>
+        <ul class="blist">
+          <li>1 server ≈ <strong>10K HTTP req/s</strong></li>
+          <li>MySQL write ≈ <strong>1–5K TPS</strong> single master</li>
+          <li>Redis ≈ <strong>100K+ ops/s</strong></li>
+          <li>1 day = <strong>86,400s</strong> (use 100K for easy math)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CAP THEOREM -->
+  <div class="p1-card cap-card">
+    <div class="p1-card-header">⚖️ CAP Theorem</div>
+    <div class="p1-card-body">
+
+      <div>
+        <div class="section-label">The Problem</div>
+        <ul class="blist">
+          <li>Data stored on multiple nodes → nodes disagree</li>
+          <li>Network partition (split brain) <strong>always happens</strong></li>
+          <li>Can't have perfect consistency AND availability simultaneously</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">The Three Properties</div>
+        <ul class="blist">
+          <li><strong>C</strong> — every node returns the same data at the same time</li>
+          <li><strong>A</strong> — every request gets a response (no timeout/error)</li>
+          <li><strong>P</strong> — system works even when nodes can't communicate</li>
+          <li>P is <strong>mandatory</strong> in distributed systems → choose C or A</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">How to Choose</div>
+        <ul class="blist">
+          <li><strong>CP</strong> — bank transfers, inventory, tickets → data must be exact</li>
+          <li><strong>AP</strong> — social feeds, shopping cart → stale data acceptable</li>
+          <li>Ask: "What's the cost of showing wrong data?" → guides choice</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">Estimation: Consistency Cost</div>
+        <ul class="blist">
+          <li>Sync replication adds <strong>~1–5ms</strong> per write (network RTT)</li>
+          <li>Async replication lag <strong>~100ms–few seconds</strong></li>
+          <li>Eventual consistency window = replication lag</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">Related: ACID vs BASE</div>
+        <ul class="blist">
+          <li><strong>ACID</strong> — SQL DBs · Atomic, Consistent, Isolated, Durable</li>
+          <li><strong>BASE</strong> — NoSQL DBs · Basically Available, Soft state, Eventually consistent</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LATENCY & THROUGHPUT -->
+  <div class="p1-card lat-card">
+    <div class="p1-card-header">⚡ Latency & Throughput</div>
+    <div class="p1-card-body">
+
+      <div>
+        <div class="section-label">The Problem</div>
+        <ul class="blist">
+          <li>Users feel slowness above <strong>100ms</strong></li>
+          <li>DB disk reads take <strong>1–10ms</strong> each → bottleneck</li>
+          <li>High traffic → throughput saturates → queuing → more latency</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">Key Latency Numbers</div>
+        <ul class="blist">
+          <li>L1 cache hit: <strong>~0.5 ns</strong></li>
+          <li>RAM read: <strong>~100 ns</strong></li>
+          <li>SSD read: <strong>~100 µs</strong></li>
+          <li>HDD read: <strong>~10 ms</strong></li>
+          <li>Same datacenter round trip: <strong>~0.5 ms</strong></li>
+          <li>Cross-continent: <strong>~150 ms</strong></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">How to Estimate</div>
+        <ul class="blist">
+          <li><strong>Throughput</strong> = 1 / avg_latency × concurrency</li>
+          <li>Bottleneck = slowest component in chain</li>
+          <li>Adding 3 DB calls at 10ms each → <strong>+30ms latency</strong></li>
+          <li>Cache hit replaces DB call: 10ms → <strong>0.1ms</strong> (100× faster)</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label">Solutions</div>
+        <ul class="blist">
+          <li><strong>Cache</strong> — move reads from disk to memory</li>
+          <li><strong>CDN</strong> — move data geographically closer to user</li>
+          <li><strong>Async</strong> — don't block on slow operations</li>
+          <li><strong>Index</strong> — O(n) table scan → O(log n) B-tree lookup</li>
+          <li><strong>P99 not avg</strong> — optimise worst-case, not average case</li>
+          <li><strong>Batching</strong> — trade latency for throughput (Kafka)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div><!-- end p1 -->
+
+<!-- ═══════════════════════════════════════ -->
+<!-- BRIDGE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="bridge" id="sec-bridge">
+  <div class="bridge-title">↓ Phase 1 Problems → Phase 2 Solutions (which layer solves what)</div>
+  <div class="bridge-grid">
+    <div class="bridge-item">
+      <div class="prob">Scalability: single server limit</div>
+      <div class="sol">→ Traffic Layer: Load Balancer spreads load across N servers</div>
+    </div>
+    <div class="bridge-item">
+      <div class="prob">Scalability: stateful servers block scaling</div>
+      <div class="sol">→ Cache Layer: Redis stores session externally, servers stay stateless</div>
+    </div>
+    <div class="bridge-item">
+      <div class="prob">Latency: DB is the bottleneck (10ms per read)</div>
+      <div class="sol">→ Cache Layer: Redis serves reads at 0.1ms, 100× faster</div>
+    </div>
+    <div class="bridge-item">
+      <div class="prob">Latency: geographic distance adds 150ms</div>
+      <div class="sol">→ Cache Layer: CDN serves static assets from edge nodes near user</div>
+    </div>
+    <div class="bridge-item">
+      <div class="prob">CAP: single DB can't scale writes</div>
+      <div class="sol">→ Database Layer: Sharding splits data, Replication scales reads</div>
+    </div>
+    <div class="bridge-item">
+      <div class="prob">Scalability: synchronous calls create cascading failures</div>
+      <div class="sol">→ Messaging Layer: Kafka/SQS decouples services, buffers traffic spikes</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PHASE 2 -->
+<!-- ═══════════════════════════════════════ -->
+<div id="sec-p2-all">
+<div class="phase-header phase2-header">⬡ Phase 2 · Core Components — Tools, Trade-offs & What Problem Each Solves</div>
+
+<!-- ── TRAFFIC LAYER ── -->
+<div class="p2-layer traffic-layer" id="sec-traffic">
+  <div class="p2-layer-header">
+    🚦 Traffic Layer
+    <span class="solve-badge">Solves: Scalability (single server limit) · SPOF · Geographic routing</span>
+  </div>
+  <div class="p2-layer-body">
+    <div class="p2-tools-grid cols2">
+
+      <div class="tool-card">
+        <div class="tool-name">Load Balancer</div>
+        <div class="tool-tagline">Distributes incoming requests across a pool of servers</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Single server can't handle all traffic → spread across N servers</li>
+            <li>One server crashes → LB detects via health check → reroutes</li>
+            <li>Enables horizontal scaling: add servers without changing clients</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Algorithms & Trade-offs</div>
+          <ul class="blist">
+            <li><strong>Round Robin</strong> — simple, equal distribution, ignores server load</li>
+            <li><strong>Weighted RR</strong> — strong servers get more traffic, manual config needed</li>
+            <li><strong>Least Connections</strong> — smart, great for variable req duration, more overhead</li>
+            <li><strong>IP Hash</strong> — same user → same server (session), but uneven if few IPs</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Key Trade-off</div>
+          <div class="tradeoff-text">L4 (TCP level) = faster, can't inspect HTTP content<br>L7 (HTTP level) = smarter routing by URL/header, slightly more overhead</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>High availability · Horizontal scale · Zero-downtime deploy</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>LB itself is a SPOF → need redundant LB pair · Adds ~1ms</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">API Gateway</div>
+        <div class="tool-tagline">Single entry point that handles cross-cutting concerns for all microservices</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>10 microservices → clients would need to know 10 addresses</li>
+            <li>Every service duplicating auth/rate-limit logic → unmaintainable</li>
+            <li>Centralise: auth, rate limiting, SSL, logging, routing in one place</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Core Features & Trade-offs</div>
+          <ul class="blist">
+            <li><strong>JWT Auth</strong> — stateless validation, no DB lookup per req · but can't revoke mid-TTL</li>
+            <li><strong>Rate Limiting</strong> — Token Bucket (allows burst) vs Leaky Bucket (smooth, strict)</li>
+            <li><strong>Routing</strong> — URL pattern → service · enables canary deploy (5% to new version)</li>
+            <li><strong>SSL Termination</strong> — decrypt at edge, plain HTTP internally → saves CPU on all services</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Key Trade-off</div>
+          <div class="tradeoff-text">Gateway adds a network hop (~1ms) and is a potential bottleneck → must be horizontally scaled behind a Load Balancer</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>DRY principle · Single place to update auth logic · Full observability</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>Extra latency · Gateway itself must be HA · Can become a god service</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── CACHE LAYER ── -->
+<div class="p2-layer cache-layer" id="sec-cache">
+  <div class="p2-layer-header">
+    ⚡ Cache Layer
+    <span class="solve-badge">Solves: Latency (DB bottleneck 10ms→0.1ms) · Throughput · Geographic distance</span>
+  </div>
+  <div class="p2-layer-body">
+    <div class="p2-tools-grid cols3">
+
+      <div class="tool-card">
+        <div class="tool-name">Redis</div>
+        <div class="tool-tagline">In-memory data store — 100K+ ops/s, ~0.1ms latency</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>DB reads take 1–10ms → cache in RAM at 0.1ms</li>
+            <li>Stateless server scaling → store session in Redis not local memory</li>
+            <li>Leaderboards, rate counters, pub/sub — all in one tool</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">5 Data Types & When to Use</div>
+          <ul class="blist">
+            <li><strong>String</strong> — cache any value, counter (INCR), distributed lock (SET NX)</li>
+            <li><strong>Hash</strong> — cache objects, update single field without rewriting whole object</li>
+            <li><strong>List</strong> — FIFO queue, recent activity feed (LPUSH/RPOP)</li>
+            <li><strong>Set</strong> — deduplication, tags, mutual friends (SINTER)</li>
+            <li><strong>Sorted Set ★</strong> — leaderboard, Feed (score=timestamp), priority queue</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Cache Write Strategy Trade-offs</div>
+          <div class="tradeoff-text">
+            Cache-Aside: app manages cache · simple · cold start miss<br>
+            Write-Through: write DB+cache together · consistent · slow writes<br>
+            Write-Back: write cache first → async DB · fast · risk data loss
+          </div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>100× faster reads · Reduces DB load dramatically</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>Data can be stale · Cache invalidation is hard · Memory is expensive</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">CDN</div>
+        <div class="tool-tagline">Geographically distributed cache — brings content close to users</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Server in Shanghai, user in New York → 150ms RTT</li>
+            <li>CDN edge node in New York → <strong>5ms RTT</strong></li>
+            <li>Origin server never gets hit for static content → massive cost saving</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Pull vs Push Trade-off</div>
+          <ul class="blist">
+            <li><strong>Pull</strong> — edge fetches on first miss, auto-cached · simple · cold start slow</li>
+            <li><strong>Push</strong> — you pre-upload to all edges · fast for known-large traffic · manual, stale risk</li>
+            <li>Use Pull for most content, Push for major events (product launch, live video)</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">What to Cache vs Not</div>
+          <ul class="blist">
+            <li>✅ Images, JS, CSS, fonts, public API responses</li>
+            <li>❌ User personal data, real-time prices, auth responses</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>Drastic latency reduction · Offloads origin traffic · DDoS protection</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>Cache invalidation hard · Monthly CDN bill · Not for dynamic/personal data</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">Cache Invalidation</div>
+        <div class="tool-tagline">The hardest part of caching — when and how to remove stale data</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Data in DB changes but cache still returns old value</li>
+            <li>Users see stale prices, profiles, counts → trust issue</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Strategies & Trade-offs</div>
+          <ul class="blist">
+            <li><strong>TTL</strong> — auto-expire after N seconds · simple · may serve stale up to TTL</li>
+            <li><strong>Write-Invalidate ★</strong> — write DB → DEL cache key · consistent · cold miss after write</li>
+            <li><strong>Versioned Keys</strong> — user:v3:123 → new version = new key · no delete · old keys linger</li>
+            <li><strong>Event-Driven</strong> — DB change → Kafka → cache service DEL · decoupled · complex chain</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">3 Failure Modes</div>
+          <ul class="blist">
+            <li><strong>Penetration</strong> — query non-existent key → always hits DB → Bloom Filter fix</li>
+            <li><strong>Stampede</strong> — hot key expires → 10K req hit DB at once → Mutex Lock fix</li>
+            <li><strong>Avalanche</strong> — many keys expire together → DB overwhelmed → Random TTL Jitter fix</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Golden Rule</div>
+          <div class="tradeoff-text">Always write DB first, then DELETE cache (not update). Deleting is safer than updating — avoids race conditions.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── SECURITY LAYER ── -->
+<div class="p2-layer security-layer" id="sec-security">
+  <div class="p2-layer-header">
+    🔐 Security Layer
+    <span class="solve-badge">Solves: Identity verification · Access control · Abuse prevention (Scalability)</span>
+  </div>
+  <div class="p2-layer-body">
+    <div class="p2-tools-grid cols3">
+
+      <div class="tool-card">
+        <div class="tool-name">JWT Authentication</div>
+        <div class="tool-tagline">Stateless identity verification — no DB lookup per request</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Every request needs to prove "who am I?" → can't query DB each time at scale</li>
+            <li>JWT carries identity in the token itself → gateway verifies with crypto, no DB</li>
+            <li>Downstream services get user context via headers, no repeated auth</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Structure & Flow</div>
+          <ul class="blist">
+            <li><strong>Header</strong> — algorithm (HS256)</li>
+            <li><strong>Payload</strong> — user_id, roles, exp timestamp</li>
+            <li><strong>Signature</strong> — HMAC of header+payload → tamper-proof</li>
+            <li>Access Token: short TTL (15min–1h) · Refresh Token: long TTL (30 days)</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>Stateless · Fast · Scales horizontally · No session store needed</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>Can't revoke mid-TTL → need Redis blacklist for logout · Payload is base64 not encrypted</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">Authorization (RBAC / ABAC)</div>
+        <div class="tool-tagline">Controls what authenticated users are allowed to do</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Authentication = who you are · Authorization = what you can do</li>
+            <li>Without it: any logged-in user can delete any resource</li>
+            <li>Two levels: coarse (API endpoint) at Gateway · fine (row-level) at service</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Models & Trade-offs</div>
+          <ul class="blist">
+            <li><strong>RBAC</strong> — User→Role→Permission · simple, easy to manage · less flexible</li>
+            <li><strong>ABAC</strong> — rules on user/resource attributes · very flexible · complex to debug</li>
+            <li><strong>ACL</strong> — per-resource permissions (Google Drive) · fine-grained · hard to audit at scale</li>
+            <li>Cache permission results in Redis with 5min TTL → avoid DB per request</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Use RBAC when</div>Clear roles exist (admin/editor/viewer). Most enterprise apps.</div>
+          <div class="vs-item vs-con"><div class="vs-label">✅ Use ABAC when</div>Complex rules: "doctor can only see their own patients in working hours"</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">Rate Limiting</div>
+        <div class="tool-tagline">Prevents abuse and protects downstream services from overload</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>One bad actor sends 1M req/s → takes down entire system</li>
+            <li>Scrapers, brute-force attacks, runaway clients</li>
+            <li>Protects DB and downstream services from traffic spikes</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Algorithms & Trade-offs</div>
+          <ul class="blist">
+            <li><strong>Token Bucket ★</strong> — allows burst up to bucket size · most realistic · recommended</li>
+            <li><strong>Leaky Bucket</strong> — strictly smooth output · protects downstream · no burst allowed</li>
+            <li><strong>Fixed Window</strong> — simple, cheap · boundary attack: 2× burst at window edge</li>
+            <li><strong>Sliding Window</strong> — accurate, no boundary issue · high memory (1 record per req)</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Distributed Rate Limiting</div>
+          <div class="tradeoff-text">Multiple gateway nodes → must share counters via Redis · Use Lua script for atomic INCR+EXPIRE · Dimension by: user ID, IP, endpoint, tenant</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Returns</div>HTTP 429 + Retry-After header · client backs off gracefully</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>Redis becomes critical dependency · Wrong limits hurt legitimate users</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── DATABASE LAYER ── -->
+<div class="p2-layer db-layer" id="sec-db">
+  <div class="p2-layer-header">
+    🗄️ Database Layer
+    <span class="solve-badge">Solves: CAP trade-offs · Data persistence · Write scalability · Read scalability</span>
+  </div>
+  <div class="p2-layer-body">
+    <div class="p2-tools-grid cols2" style="margin-bottom:10px;">
+
+      <div class="tool-card">
+        <div class="tool-name">SQL (MySQL / PostgreSQL)</div>
+        <div class="tool-tagline">Relational DB — structured data, strong consistency, ACID transactions</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Need guaranteed correctness: bank transfers, order placement, inventory</li>
+            <li>Complex queries with JOINs across related tables</li>
+            <li>Schema enforces data integrity (foreign keys, constraints)</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">ACID Properties</div>
+          <ul class="blist">
+            <li><strong>Atomic</strong> — all ops succeed or all roll back (no half-transfer)</li>
+            <li><strong>Consistent</strong> — DB moves between valid states only</li>
+            <li><strong>Isolated</strong> — concurrent txns don't interfere</li>
+            <li><strong>Durable</strong> — committed data survives crashes (WAL log)</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Choose SQL when</div>Structured data · Transactions needed · Complex queries · &lt;TB scale</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Limitation</div>Hard to scale writes · Schema changes expensive on large tables · Vertical scaling has ceiling</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">NoSQL Family</div>
+        <div class="tool-tagline">Four types — each solves a specific data problem SQL can't handle at scale</div>
+        <div class="tool-section">
+          <div class="section-label">Document (MongoDB)</div>
+          <ul class="blist">
+            <li>Solves: varying schema per record (product catalogue, CMS)</li>
+            <li>Trade-off: flexible + fast iteration vs no joins, no cross-doc transactions</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="tool-section">
+          <div class="section-label">Wide-Column (Cassandra)</div>
+          <ul class="blist">
+            <li>Solves: massive write throughput + time-series queries (IoT, logs, tweets)</li>
+            <li>Trade-off: AP system (eventual consistency) · optimised for known query patterns only</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="tool-section">
+          <div class="section-label">Key-Value (DynamoDB / Redis)</div>
+          <ul class="blist">
+            <li>Solves: ultra-low latency simple lookups (session, cart, cache)</li>
+            <li>Trade-off: O(1) reads/writes vs no complex queries</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="tool-section">
+          <div class="section-label">Graph (Neo4j)</div>
+          <ul class="blist">
+            <li>Solves: multi-hop relationship queries (social graph, fraud, recommendations)</li>
+            <li>Trade-off: perfect for relationships vs poor for non-graph queries</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="p2-tools-grid cols2">
+
+      <div class="tool-card">
+        <div class="tool-name">Replication</div>
+        <div class="tool-tagline">Copies data to multiple nodes — solves read scalability and availability</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Single DB node → single point of failure, can't scale reads</li>
+            <li>Read replicas absorb read traffic (read:write often 10:1+)</li>
+            <li>Master fails → promote replica → minimise downtime</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Sync vs Async Trade-off</div>
+          <ul class="blist">
+            <li><strong>Synchronous</strong> — write confirmed only when all replicas ACK · zero data loss · slow writes</li>
+            <li><strong>Asynchronous ★</strong> — write confirmed when master writes · fast · may lose few ms of data on crash</li>
+            <li>Most systems use async + accept tiny data loss window</li>
+            <li><strong>Replication Lag</strong> — replica may be seconds behind master · stale reads possible</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>Read scale-out · High availability · Failover in 30s–2min via Sentinel</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>Async = possible stale reads · Failover has brief write downtime · Replication lag</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">Sharding</div>
+        <div class="tool-tagline">Splits data across multiple DB nodes — solves write scalability and storage limits</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Single DB can't hold 10TB of data or handle 100K writes/s</li>
+            <li>Split data horizontally: each shard owns a subset of rows</li>
+            <li>Write traffic distributed across shards → scales linearly</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Strategies & Trade-offs</div>
+          <ul class="blist">
+            <li><strong>Hash Sharding ★</strong> — shard = hash(key) % N · even distribution · range queries hit all shards</li>
+            <li><strong>Range Sharding</strong> — shard by value range · range queries efficient · hot shard risk (new data)</li>
+            <li><strong>Directory</strong> — lookup table maps key→shard · flexible · lookup table is bottleneck</li>
+            <li><strong>Consistent Hashing</strong> — adding node only moves 1/N data · used by Cassandra, DynamoDB</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Big Trade-off</div>
+          <div class="tradeoff-text">Cross-shard JOINs are very expensive · Shard key choice is irreversible · Rebalancing is painful · Last resort after cache + replication</div>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Gains</div>Unlimited write scale · Distribute storage across cheap machines</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Cost</div>No cross-shard transactions · Complex operations · Hard to change shard key later</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MESSAGING LAYER ── -->
+<div class="p2-layer mq-layer" id="sec-mq">
+  <div class="p2-layer-header">
+    📨 Messaging & Async Layer
+    <span class="solve-badge">Solves: Scalability (traffic spikes) · Latency (slow sync calls) · Service coupling</span>
+  </div>
+  <div class="p2-layer-body">
+    <div class="p2-tools-grid cols3">
+
+      <div class="tool-card">
+        <div class="tool-name">Kafka</div>
+        <div class="tool-tagline">Distributed event streaming — high throughput, replay, multi-consumer</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Need 1 event consumed by multiple independent services</li>
+            <li>Need to replay past events (audit, rebuild state, fix bugs)</li>
+            <li>Massive write throughput: millions of events/sec (logs, IoT, clicks)</li>
+            <li>Traffic buffering: absorb spikes, consumers process at own pace</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Key Concepts</div>
+          <ul class="blist">
+            <li><strong>Topic</strong> — named channel (order-events, user-clicks)</li>
+            <li><strong>Partition</strong> — topic split across machines → parallel writes</li>
+            <li><strong>Consumer Group</strong> — each group gets all messages independently</li>
+            <li><strong>Offset</strong> — consumer's position, can rewind to replay</li>
+            <li>Messages <strong>retained 7 days</strong> by default, not deleted on consume</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Choose Kafka when</div>High volume · Need replay · Multiple consumers · Event sourcing · Log pipeline</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Limitation</div>Operationally complex · Overkill for simple task queues · No per-message routing</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">RabbitMQ / SQS</div>
+        <div class="tool-tagline">Traditional message broker — task queues, flexible routing, low latency delivery</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Async task dispatch: send email, resize image, process payment callback</li>
+            <li>Decouple producer from consumer — producer doesn't wait for result</li>
+            <li>Work queue: N workers pull tasks, auto load-balanced</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Key Concepts & Trade-offs</div>
+          <ul class="blist">
+            <li>Messages <strong>deleted after ACK</strong> — no replay (unlike Kafka)</li>
+            <li><strong>Push model</strong> — broker pushes to consumer → lower latency than Kafka pull</li>
+            <li><strong>Exchange routing</strong> — Direct/Topic/Fanout → flexible message routing rules</li>
+            <li><strong>Dead Letter Queue</strong> — failed messages after N retries → DLQ for inspection</li>
+            <li><strong>SQS (AWS)</strong> — managed RabbitMQ equivalent, pairs with SNS for fan-out</li>
+          </ul>
+        </div>
+        <div class="vs-row">
+          <div class="vs-item vs-pro"><div class="vs-label">✅ Choose RabbitMQ when</div>Task queues · Need routing rules · Lower volume · Simple to operate</div>
+          <div class="vs-item vs-con"><div class="vs-label">⚠️ Limitation</div>No message replay · Lower throughput than Kafka · Messages gone after consume</div>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">Async Patterns</div>
+        <div class="tool-tagline">Design principles that apply regardless of which MQ you use</div>
+        <div class="tool-section">
+          <div class="section-label">What Problem It Solves</div>
+          <ul class="blist">
+            <li>Sync call chain: A→B→C→D fails if any step fails → user sees error</li>
+            <li>Async: A puts event on queue, returns immediately → resilient</li>
+            <li>Traffic spike: 100K req/s hits queue, consumers process at 1K/s → DB survives</li>
+          </ul>
+        </div>
+        <div class="tool-section">
+          <div class="section-label">Critical Reliability Concepts</div>
+          <ul class="blist">
+            <li><strong>ACK</strong> — consumer confirms processing · broker retries if no ACK · at-least-once delivery</li>
+            <li><strong>Idempotency ★</strong> — same message processed twice = same result · use message ID dedup</li>
+            <li><strong>DLQ</strong> — after N failures, move to dead letter queue · prevents poison pill blocking queue</li>
+            <li><strong>Backpressure</strong> — queue full → producer slows down · prevents OOM</li>
+          </ul>
+        </div>
+        <div class="tradeoff">
+          <div class="tradeoff-label">Core Trade-off of Async</div>
+          <div class="tradeoff-text">Gain: resilience, decoupling, traffic buffering<br>Cost: eventual consistency (result not immediate) · harder to debug · out-of-order delivery possible</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div><!-- end p2 -->
+
+<script>
+function show(section) {
+  const all = ['p1','traffic','cache','security','db','mq'];
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+
+  if (section === 'all') {
+    document.getElementById('sec-p1').style.display = '';
+    document.getElementById('sec-bridge').style.display = '';
+    document.getElementById('sec-p2-all').style.display = '';
+    document.querySelector('.nav button').classList.add('active');
+    return;
+  }
+
+  if (section === 'p1') {
+    document.getElementById('sec-p1').style.display = '';
+    document.getElementById('sec-bridge').style.display = '';
+    document.getElementById('sec-p2-all').style.display = 'none';
+  } else {
+    document.getElementById('sec-p1').style.display = 'none';
+    document.getElementById('sec-bridge').style.display = 'none';
+    document.getElementById('sec-p2-all').style.display = '';
+    ['traffic','cache','security','db','mq'].forEach(id => {
+      const el = document.getElementById('sec-' + id);
+      if (el) el.style.display = (id === section) ? '' : 'none';
+    });
+  }
+
+  event.target.classList.add('active');
+}
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+
+</body>
+</html>
