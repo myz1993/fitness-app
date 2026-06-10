@@ -416,17 +416,6 @@ footer{text-align:center;padding:2.5rem 1rem;font-size:12px;color:var(--text-3);
       <div class="chip"><div class="chip-dot" style="background:#BA7517"></div>Amber Warning <code>#BA7517</code></div>
       <div class="chip"><div class="chip-dot" style="background:#f5f5f5;border:1px solid #e8e8e8"></div>Card BG <code>#f5f5f5</code></div>
     </div>
-    <h4>Typography</h4>
-    <table><thead><tr><th>Usage</th><th>Weight</th></tr></thead><tbody>
-      <tr><td>Body text, labels, hints</td><td><code>400</code></td></tr>
-      <tr><td>Headings, buttons, numbers</td><td><code>500 / 600</code></td></tr>
-    </tbody></table>
-    <h4>Desktop Sidebar States</h4>
-    <table><thead><tr><th>State</th><th>Width</th><th>Content</th><th>Trigger</th></tr></thead><tbody>
-      <tr><td><span class="state-badge collapsed">Collapsed</span></td><td><code>36px</code></td><td>Icons only</td><td>Default on page load</td></tr>
-      <tr><td><span class="state-badge expanded">Expanded</span></td><td><code>128px</code></td><td>Icons + labels</td><td>Click ☰ toggle button</td></tr>
-    </tbody></table>
-    <p class="note">Transition: width 220ms ease · Label fade-in: opacity 150ms ease (60ms delay)</p>
   </div>
 </section>
 
@@ -448,9 +437,10 @@ footer{text-align:center;padding:2.5rem 1rem;font-size:12px;color:var(--text-3);
 <section class="spec-section" id="login">
   <div class="section-header"><div class="section-num">3</div><div class="section-title">Login</div></div>
   <div class="mockup-row">
-    <!-- MOBILE -->
+
+    <!-- STATE 1: Default (empty) -->
     <div class="mockup-col">
-      <div class="mockup-tag">📱 Mobile</div>
+      <div class="mockup-tag">📱 Default</div>
       <div class="phone">
         <div class="phone-top"><div class="phone-notch"></div></div>
         <div class="phone-bar">Login</div>
@@ -460,15 +450,70 @@ footer{text-align:center;padding:2.5rem 1rem;font-size:12px;color:var(--text-3);
           <div class="p-field"><div class="p-label">Password</div><div class="p-input"><span>••••••••</span><span style="font-size:9px">👁</span></div></div>
           <div style="text-align:right;font-size:6.5px;color:var(--green);margin-bottom:2px;">Forgot password?</div>
           <div class="p-btn">Log in</div>
-          <div class="p-divider"><div class="p-div-line"></div><div class="p-div-txt">or continue with</div><div class="p-div-line"></div></div>
-          <div class="p-social">🇬 Google</div><div class="p-social">🍎 Apple</div>
         </div>
       </div>
-      <div class="mockup-note">Centered single column. Success → Profile Setup or Home.</div>
+      <div class="mockup-note">Default — empty fields, no errors.</div>
     </div>
-    <!-- DESKTOP (no sidebar on login) -->
+
+    <!-- STATE 2: Wrong password -->
     <div class="mockup-col">
-      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="mockup-tag">📱 Wrong Password</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Login</div>
+        <div class="phone-body">
+          <div class="p-logo-wrap"><div class="p-logo">🌿</div><div class="p-app-name">FitTrack</div><div class="p-app-sub">Welcome back</div></div>
+          <!-- inline error banner -->
+          <div style="background:#FEF0F0;border:1px solid #F5C6C6;padding:5px 7px;margin-bottom:6px;display:flex;align-items:center;gap:5px;">
+            <span style="font-size:10px;">⚠️</span>
+            <span style="font-size:6.5px;color:#A32D2D;font-weight:500;">Incorrect password. Please try again.</span>
+          </div>
+          <div class="p-field">
+            <div class="p-label">Email</div>
+            <div class="p-input ok"><span style="color:var(--text)">zhang@gmail.com</span><span style="font-size:9px;color:var(--green)">✓</span></div>
+          </div>
+          <div class="p-field">
+            <div class="p-label">Password</div>
+            <div class="p-input err"><span style="color:var(--text)">••••••••</span><span style="font-size:9px;color:var(--red)">!</span></div>
+            <div style="font-size:5.5px;color:var(--red);margin-top:2px;">Incorrect password. <span style="color:var(--green);text-decoration:underline;">Forgot password?</span></div>
+          </div>
+          <div class="p-btn" style="background:#E24B4A;">Log in</div>
+        </div>
+      </div>
+      <div class="mockup-note">Password field: red border + ! icon + inline hint. Top banner summarises the error.</div>
+    </div>
+
+    <!-- STATE 3: Email not found -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Email Not Found</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Login</div>
+        <div class="phone-body">
+          <div class="p-logo-wrap"><div class="p-logo">🌿</div><div class="p-app-name">FitTrack</div><div class="p-app-sub">Welcome back</div></div>
+          <div style="background:#FEF0F0;border:1px solid #F5C6C6;padding:5px 7px;margin-bottom:6px;display:flex;align-items:center;gap:5px;">
+            <span style="font-size:10px;">⚠️</span>
+            <span style="font-size:6.5px;color:#A32D2D;font-weight:500;">No account found with this email.</span>
+          </div>
+          <div class="p-field">
+            <div class="p-label">Email</div>
+            <div class="p-input err"><span style="color:var(--text)">unknown@gmail.com</span><span style="font-size:9px;color:var(--red)">!</span></div>
+            <div style="font-size:5.5px;color:var(--red);margin-top:2px;">No account found. <span style="color:var(--green);text-decoration:underline;">Sign up instead?</span></div>
+          </div>
+          <div class="p-field">
+            <div class="p-label">Password</div>
+            <div class="p-input"><span>••••••••</span><span style="font-size:9px">👁</span></div>
+          </div>
+          <div style="text-align:right;font-size:6.5px;color:var(--green);margin-bottom:2px;">Forgot password?</div>
+          <div class="p-btn" style="background:#E24B4A;">Log in</div>
+        </div>
+      </div>
+      <div class="mockup-note">Email field: red border + hint + "Sign up instead?" link. Button turns red on error.</div>
+    </div>
+
+    <!-- DESKTOP: all 3 states -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop — Default</div>
       <div class="desktop">
         <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
         <div class="desktop-browser"><div class="d-url">fittrack.app/login</div></div>
@@ -484,14 +529,91 @@ footer{text-align:center;padding:2.5rem 1rem;font-size:12px;color:var(--text-3);
             <div class="d-field"><div class="d-lbl">Password</div><div class="d-input"><span>••••••••</span><span style="font-size:10px">👁</span></div></div>
             <div style="text-align:right;font-size:8px;color:var(--green);margin-top:3px;">Forgot password?</div>
             <div class="d-btn">Log in</div>
-            <div class="d-divider"><div class="d-div-line"></div><div class="d-div-txt">or continue with</div><div class="d-div-line"></div></div>
-            <div class="d-social">🇬 Continue with Google</div>
-            <div class="d-social">🍎 Continue with Apple</div>
           </div>
         </div>
       </div>
-      <div class="mockup-note">Split layout — brand panel left, form right. No sidebar on auth screens.</div>
+      <div class="mockup-note">Default — clean state.</div>
     </div>
+
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop — Wrong Password</div>
+      <div class="desktop">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/login</div></div>
+        <div class="d-login-wrap">
+          <div class="d-login-left">
+            <div class="d-login-logo">🌿</div>
+            <div class="d-login-name">FitTrack</div>
+            <div class="d-login-sub">Track nutrition, weight, exercise &amp; hydration — all in one place.</div>
+          </div>
+          <div class="d-login-right">
+            <div class="d-login-title">Welcome back</div>
+            <!-- error banner -->
+            <div style="background:#FEF0F0;border:1px solid #F5C6C6;padding:7px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+              <span style="font-size:13px;">⚠️</span>
+              <span style="font-size:8.5px;color:#A32D2D;font-weight:500;">Incorrect password. Please try again.</span>
+            </div>
+            <div class="d-field">
+              <div class="d-lbl">Email</div>
+              <div class="d-input" style="border-color:var(--green);background:var(--green-light);"><span style="color:var(--text)">zhang@gmail.com</span><span style="font-size:11px;color:var(--green)">✓</span></div>
+            </div>
+            <div class="d-field">
+              <div class="d-lbl">Password</div>
+              <div class="d-input" style="border-color:var(--red);background:#FEF0F0;"><span style="color:var(--text)">••••••••</span><span style="font-size:11px;color:var(--red)">!</span></div>
+              <div style="font-size:7.5px;color:var(--red);margin-top:3px;">Incorrect password. <span style="color:var(--green);text-decoration:underline;cursor:pointer;">Forgot password?</span></div>
+            </div>
+            <div class="d-btn" style="background:#E24B4A;">Log in</div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Top error banner + password field red border + inline hint + "Forgot password?" shortcut.</div>
+    </div>
+
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop — Email Not Found</div>
+      <div class="desktop">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/login</div></div>
+        <div class="d-login-wrap">
+          <div class="d-login-left">
+            <div class="d-login-logo">🌿</div>
+            <div class="d-login-name">FitTrack</div>
+            <div class="d-login-sub">Track nutrition, weight, exercise &amp; hydration — all in one place.</div>
+          </div>
+          <div class="d-login-right">
+            <div class="d-login-title">Welcome back</div>
+            <div style="background:#FEF0F0;border:1px solid #F5C6C6;padding:7px 10px;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+              <span style="font-size:13px;">⚠️</span>
+              <span style="font-size:8.5px;color:#A32D2D;font-weight:500;">No account found with this email address.</span>
+            </div>
+            <div class="d-field">
+              <div class="d-lbl">Email</div>
+              <div class="d-input" style="border-color:var(--red);background:#FEF0F0;"><span style="color:var(--text)">unknown@gmail.com</span><span style="font-size:11px;color:var(--red)">!</span></div>
+              <div style="font-size:7.5px;color:var(--red);margin-top:3px;">No account found. <span style="color:var(--green);text-decoration:underline;cursor:pointer;">Sign up instead?</span></div>
+            </div>
+            <div class="d-field">
+              <div class="d-lbl">Password</div>
+              <div class="d-input"><span>••••••••</span><span style="font-size:10px">👁</span></div>
+            </div>
+            <div style="text-align:right;font-size:8px;color:var(--green);margin-top:3px;">Forgot password?</div>
+            <div class="d-btn" style="background:#E24B4A;">Log in</div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Email field red border + "Sign up instead?" link. Password field left neutral.</div>
+    </div>
+
+  </div>
+
+  <div class="spec-card">
+    <h3>Error State Rules</h3>
+    <table><thead><tr><th>Error</th><th>Field highlight</th><th>Inline hint</th><th>Banner message</th></tr></thead><tbody>
+      <tr><td>Wrong password</td><td>Password — red border + <code>!</code> icon</td><td>"Incorrect password." + Forgot password? link</td><td>"Incorrect password. Please try again."</td></tr>
+      <tr><td>Email not found</td><td>Email — red border + <code>!</code> icon</td><td>"No account found." + Sign up instead? link</td><td>"No account found with this email address."</td></tr>
+      <tr><td>Empty field on submit</td><td>Both fields — red border</td><td>"This field is required."</td><td>—</td></tr>
+      <tr><td>Invalid email format</td><td>Email — red border + <code>!</code> icon</td><td>"Please enter a valid email address."</td><td>—</td></tr>
+    </tbody></table>
+    <p class="note" style="margin-top:0.75rem;">Log in button turns <code style="color:var(--red)">#E24B4A</code> red when a server-side error is returned (wrong password / email not found). It stays green for client-side validation errors (empty / format).</p>
   </div>
 </section>
 
