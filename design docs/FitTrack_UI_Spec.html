@@ -3,952 +3,1701 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitTrack — UI Design Specification v1.0</title>
+<title>FitTrack — UI Design Specification v1.2</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #1D9E75;
-    --green-light: #E1F5EE;
-    --green-border: #9FE1CB;
-    --green-dark: #0F6E56;
-    --green-deep: #085041;
-    --blue: #378ADD;
-    --blue-light: #E6F1FB;
-    --blue-border: #85B7EB;
-    --blue-dark: #185FA5;
-    --red: #E24B4A;
-    --amber: #BA7517;
-    --text: #1a1a1a;
-    --text-2: #555;
-    --text-3: #999;
-    --bg: #f7f8f6;
-    --surface: #ffffff;
-    --border: #e8e8e8;
-    --border-2: #d0d0d0;
-    --font: 'DM Sans', sans-serif;
-    --mono: 'DM Mono', monospace;
-  }
+:root {
+  --green:#1D9E75;--green-light:#E1F5EE;--green-border:#9FE1CB;--green-dark:#0F6E56;--green-deep:#085041;
+  --blue:#378ADD;--blue-light:#E6F1FB;--blue-border:#85B7EB;--blue-dark:#185FA5;
+  --red:#E24B4A;--amber:#BA7517;
+  --text:#1a1a1a;--text-2:#555;--text-3:#999;--bg:#f7f8f6;--surface:#fff;--border:#e8e8e8;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;}
+.site-header{background:var(--green);color:#fff;padding:3rem 2rem 2.5rem;}
+.header-inner{max-width:1300px;margin:0 auto;}
+.header-tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-bottom:.5rem;}
+.header-title{font-size:2.4rem;font-weight:600;letter-spacing:-.02em;margin-bottom:.4rem;}
+.header-sub{font-size:1rem;opacity:.8;}
+.header-meta{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;}
+.meta-pill{background:rgba(255,255,255,.18);padding:4px 12px;font-size:12px;border:1px solid rgba(255,255,255,.3);}
+.page{max-width:1300px;margin:0 auto;padding:2rem;}
+.toc{background:var(--surface);border:1px solid var(--border);padding:1.5rem;margin-bottom:3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px;}
+.toc-header{grid-column:1/-1;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.toc-item{font-size:13px;color:var(--green);text-decoration:none;padding:5px 8px;transition:background .15s;}
+.toc-item:hover{background:var(--green-light);}
+.spec-section{margin-bottom:5rem;scroll-margin-top:2rem;}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--green-light);}
+.section-num{width:32px;height:32px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;}
+.section-title{font-size:1.4rem;font-weight:600;letter-spacing:-.01em;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* mockup layout */
+.mockup-row{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;margin-bottom:1.5rem;}
+.mockup-col{display:flex;flex-direction:column;align-items:center;}
+.mockup-tag{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;}
+.mockup-note{font-size:11px;color:var(--text-3);text-align:center;margin-top:8px;font-style:italic;max-width:200px;line-height:1.4;}
+.state-divider{display:flex;align-items:center;gap:10px;margin:0 8px;align-self:center;font-size:11px;color:var(--text-3);font-style:italic;}
 
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-  }
+/* PHONE */
+.phone{width:165px;background:var(--surface);border:2px solid #222;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.12);flex-shrink:0;}
+.phone-top{height:8px;background:#222;display:flex;align-items:center;justify-content:center;}
+.phone-notch{width:36px;height:5px;background:#444;margin-top:1px;}
+.phone-bar{font-size:9.5px;font-weight:600;color:var(--text-2);text-align:center;padding:5px 8px 4px;background:#f3f3f3;border-bottom:1px solid var(--border);}
+.phone-body{padding:8px;overflow-y:auto;max-height:320px;}
+.phone-body::-webkit-scrollbar{width:3px;}
+.phone-body::-webkit-scrollbar-track{background:transparent;}
+.phone-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
-  /* ── HEADER ── */
-  .site-header {
-    background: var(--green);
-    color: #fff;
-    padding: 3rem 2rem 2.5rem;
-  }
-  .header-inner { max-width: 1100px; margin: 0 auto; }
-  .header-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; }
-  .header-title { font-size: 2.4rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
-  .header-sub { font-size: 1rem; opacity: 0.8; }
-  .header-meta { display: flex; gap: 1.5rem; margin-top: 1.5rem; flex-wrap: wrap; }
-  .meta-pill { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 12px; }
+/* DESKTOP */
+.desktop{width:520px;background:var(--surface);border:2px solid #222;box-shadow:0 8px 28px rgba(0,0,0,.12);flex-shrink:0;}
+.desktop-bar{height:22px;background:#2a2a2a;display:flex;align-items:center;gap:6px;padding:0 10px;}
+.d-dot{width:8px;height:8px;background:#555;}
+.d-dot.r{background:#FF5F57;}.d-dot.y{background:#FEBC2E;}.d-dot.g{background:#28C840;}
+.desktop-browser{height:18px;background:#3a3a3a;display:flex;align-items:center;padding:0 10px;gap:8px;}
+.d-url{flex:1;background:#555;height:11px;display:flex;align-items:center;padding:0 8px;font-size:7px;color:#bbb;font-family:var(--mono);}
 
-  /* ── LAYOUT ── */
-  .page { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+/* SIDEBAR */
+.d-body{display:flex;height:320px;}
+.d-sidebar{width:36px;background:#fafafa;border-right:1px solid var(--border);padding:8px 0;flex-shrink:0;overflow:hidden;transition:width .22s ease;cursor:pointer;position:relative;}
+.d-sidebar.open{width:128px;cursor:default;}
+.d-sidebar-toggle{display:flex;align-items:center;justify-content:center;width:36px;height:22px;margin-bottom:6px;color:var(--text-3);font-size:13px;cursor:pointer;user-select:none;flex-shrink:0;}
+.d-sidebar.open .d-sidebar-toggle{justify-content:flex-end;padding-right:10px;width:100%;}
+.d-logo{display:flex;align-items:center;gap:6px;padding:0 8px 8px;border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;}
+.d-logo-icon{width:18px;height:18px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;}
+.d-logo-name{font-size:10px;font-weight:600;color:var(--text);opacity:0;transition:opacity .15s ease .05s;white-space:nowrap;}
+.d-sidebar.open .d-logo-name{opacity:1;}
+.d-nav{padding:4px 0;}
+.d-nav-item{display:flex;align-items:center;gap:6px;padding:5px 8px;font-size:9px;color:var(--text-2);cursor:pointer;white-space:nowrap;overflow:hidden;}
+.d-nav-item.active{background:var(--green-light);color:var(--green-dark);font-weight:600;border-left:2px solid var(--green);padding-left:6px;}
+.d-nav-icon{font-size:12px;flex-shrink:0;}
+.d-nav-label{opacity:0;transition:opacity .12s ease .06s;}
+.d-sidebar.open .d-nav-label{opacity:1;}
 
-  /* ── TOC ── */
-  .toc {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 3rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 6px;
-  }
-  .toc-item { font-size: 13px; color: var(--green); text-decoration: none; padding: 6px 10px; border-radius: 6px; transition: background 0.15s; }
-  .toc-item:hover { background: var(--green-light); }
-  .toc-header { grid-column: 1/-1; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+/* desktop login (no sidebar) */
+.d-login-wrap{display:flex;height:320px;}
+.d-login-left{width:200px;background:var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;flex-shrink:0;}
+.d-login-logo{width:40px;height:40px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:8px;}
+.d-login-name{font-size:15px;font-weight:600;color:#fff;margin-bottom:3px;}
+.d-login-sub{font-size:8.5px;color:rgba(255,255,255,.7);text-align:center;line-height:1.5;}
+.d-login-right{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 20px;}
+.d-login-title{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text);}
 
-  /* ── SECTION ── */
-  .spec-section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
-  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--green-light); }
-  .section-num { width: 32px; height: 32px; background: var(--green); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
-  .section-title { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.01em; }
+/* desktop shared inputs */
+.d-field{margin-bottom:7px;}
+.d-lbl{font-size:7.5px;font-weight:600;color:var(--text-2);margin-bottom:2px;letter-spacing:.04em;text-transform:uppercase;}
+.d-input{height:20px;background:#f5f5f5;border:1px solid var(--border);padding:0 7px;font-size:8.5px;color:var(--text-3);display:flex;align-items:center;justify-content:space-between;width:100%;}
+.d-btn{height:22px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#fff;margin-top:9px;cursor:pointer;width:100%;}
+.d-divider{display:flex;align-items:center;gap:7px;margin:7px 0;}
+.d-div-line{flex:1;height:1px;background:var(--border);}
+.d-div-txt{font-size:7.5px;color:var(--text-3);}
+.d-social{height:18px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:5px;font-size:8.5px;color:var(--text-2);margin-bottom:4px;}
 
-  /* ── SCREEN GRID ── */
-  .screen-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; align-items: flex-start; }
-  .screen-col { flex-shrink: 0; }
-  .screen-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); text-align: center; margin-bottom: 8px; }
-  .screen-note { font-size: 11px; color: var(--text-3); text-align: center; margin-top: 8px; font-style: italic; max-width: 160px; line-height: 1.4; }
-  .arrow { font-size: 20px; color: var(--text-3); align-self: center; flex-shrink: 0; padding-top: 0; margin-top: -40px; }
+/* desktop profile */
+.d-profile-wrap{display:flex;height:320px;}
+.d-profile-form{flex:1;padding:14px;overflow:auto;}
+.d-profile-preview{width:160px;background:var(--green-light);padding:12px;flex-shrink:0;border-left:1px solid var(--green-border);}
+.d-profile-h{font-size:11px;font-weight:600;margin-bottom:10px;}
+.d-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;}
+.d-field-full{grid-column:1/-1;}
+.d-preview-title{font-size:7.5px;font-weight:600;color:var(--green-deep);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.d-preview-val{font-size:17px;font-weight:600;color:var(--green-dark);line-height:1;}
+.d-preview-sub{font-size:7.5px;color:var(--green-dark);margin-bottom:10px;}
+.d-save-btn{height:24px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#fff;margin-top:12px;}
 
-  /* ── PHONE FRAME ── */
-  .phone {
-    width: 160px;
-    background: var(--surface);
-    border: 2px solid #222;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-  }
-  .phone-top { height: 8px; background: #222; display: flex; align-items: center; justify-content: center; }
-  .phone-notch { width: 36px; height: 5px; background: #444; border-radius: 3px; margin-top: 1px; }
-  .phone-screen-title { font-size: 9.5px; font-weight: 600; color: var(--text-2); text-align: center; padding: 5px 8px 4px; background: #f3f3f3; border-bottom: 1px solid var(--border); letter-spacing: 0.03em; }
-  .phone-body { padding: 8px; font-family: var(--font); }
+/* desktop home */
+.d-home-content{flex:1;overflow:hidden;}
+.d-hero{background:var(--green-light);padding:8px 12px;display:flex;justify-content:space-around;align-items:center;margin-bottom:8px;}
+.d-hero-item{text-align:center;}
+.d-hero-n{font-size:18px;font-weight:600;color:var(--green-dark);}
+.d-hero-l{font-size:8px;color:var(--green-dark);}
+.d-hero-div{width:1px;height:30px;background:var(--green-border);}
+.d-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 12px;}
+.d-card{background:#f5f5f5;padding:8px;}
+.d-card-title{font-size:8.5px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.d-card-sub{font-size:7px;color:var(--text-3);margin-bottom:4px;}
+.d-card-val{font-size:15px;font-weight:600;color:var(--text);}
+.d-card-unit{font-size:7.5px;color:var(--text-2);}
+.d-card-bar{height:3px;background:var(--border);overflow:hidden;margin-top:5px;}
+.d-card-fill{height:100%;}
 
-  /* phone internals */
-  .p-back { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
-  .p-back-icon { font-size: 14px; color: var(--text-3); }
-  .p-screen-h { font-size: 10px; font-weight: 600; color: var(--text); }
+/* desktop diet */
+.d-diet-body{flex:1;min-width:0;height:320px;overflow-y:auto;}.d-diet-body::-webkit-scrollbar{width:3px;}.d-diet-body::-webkit-scrollbar-thumb{background:#d0d0d0;border-radius:2px;}
+.d-diet-main{padding:10px 15px;}.d-diet-main::-webkit-scrollbar{width:3px;}.d-diet-main::-webkit-scrollbar-track{background:transparent;}.d-diet-main::-webkit-scrollbar-thumb{background:#d0d0d0;border-radius:2px;}
+.d-diet-progress{border-top:1px solid var(--border);padding:8px 15px 6px;margin-top:8px;}
+.d-diet-left{flex:1;padding:10px;border-right:1px solid var(--border);overflow:hidden;}
+.d-diet-right{width:170px;padding:10px;display:flex;flex-direction:column;align-items:center;}
+.d-goal-banner{background:var(--green-light);padding:7px 10px;margin-bottom:8px;}
+.d-gb-lbl{font-size:7.5px;font-weight:600;color:var(--green-deep);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+.d-gb-row{display:flex;justify-content:space-around;}
+.d-gb-item{text-align:center;}
+.d-gb-num{font-size:15px;font-weight:600;color:var(--green-dark);}
+.d-gb-sub{font-size:7px;color:var(--green-dark);}
+.d-gb-div{width:1px;height:26px;background:var(--green-border);margin:0 4px;}
+.d-search{height:20px;background:#f5f5f5;border:1px solid var(--border);display:flex;align-items:center;gap:4px;padding:0 8px;margin-bottom:6px;font-size:8px;color:var(--text-3);}
+.d-log-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;width:100%;}
+.d-food-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);}
+.d-food-name{font-size:8.5px;color:var(--text);}
+.d-food-kcal{font-size:7.5px;color:var(--green);}
+.d-food-add{font-size:7px;background:var(--green-light);color:var(--green-deep);padding:2px 6px;font-weight:600;cursor:pointer;}
+.d-section-h{font-size:7.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin:0 0 4px;}
+.d-ring-label{font-size:7.5px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.d-ring-stat{font-size:11px;font-weight:600;color:var(--green);margin-top:5px;}
+.d-ring-sub{font-size:7.5px;color:var(--text-3);}
+.d-total-row{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--border);margin-top:5px;}
+.d-total-lbl{font-size:8.5px;font-weight:600;}
+.d-total-val{font-size:8.5px;font-weight:600;color:var(--red);}
+.d-progress-bar-wrap{width:100%;}
+.d-prog-lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.d-prog-title{font-size:8px;font-weight:600;color:var(--text-2);}
+.d-prog-pct{font-size:8px;font-weight:600;color:var(--green);}
+.d-full-bar{height:8px;background:#E1F5EE;overflow:hidden;width:100%;}
+.d-full-fill{height:100%;background:var(--green);}
+.d-prog-nums{display:flex;justify-content:space-between;margin-top:3px;font-size:6.5px;color:var(--text-3);}
 
-  .p-logo-wrap { text-align: center; padding: 8px 0 6px; }
-  .p-logo { width: 36px; height: 36px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 18px; }
-  .p-app-name { font-size: 12px; font-weight: 600; color: var(--text); }
-  .p-app-sub { font-size: 7px; color: var(--text-3); margin-top: 1px; }
+/* desktop common food card grid — matches uploaded screenshot style */
+.d-common-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.d-common-card{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);padding:7px 10px;cursor:pointer;transition:border-color .12s;}
+.d-common-card:hover{border-color:var(--green-border);background:var(--green-light);}
+.d-cc-emoji{font-size:14px;flex-shrink:0;}
+.d-cc-name{font-size:9px;color:var(--text);flex:1;}
+.d-cc-kcal{font-size:9px;color:var(--text-3);font-weight:400;}
+.m-chip-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:2px;}
+.m-chip{background:#f5f5f5;border:1px solid var(--border);padding:4px 6px;font-size:7px;color:var(--text);display:flex;justify-content:space-between;align-items:center;}
+.m-chip-k{font-size:6px;color:var(--text-3);}
 
-  .p-field { margin-bottom: 5px; }
-  .p-label { font-size: 6.5px; font-weight: 600; color: var(--text-2); margin-bottom: 2px; letter-spacing: 0.04em; text-transform: uppercase; }
-  .p-input { height: 16px; background: #f5f5f5; border: 1px solid var(--border); border-radius: 5px; padding: 0 6px; font-size: 7px; color: var(--text-3); display: flex; align-items: center; justify-content: space-between; }
-  .p-input.ok { border-color: var(--green); background: var(--green-light); }
-  .p-input.err { border-color: var(--red); background: #fff0f0; }
-  .p-hint { font-size: 5.5px; color: var(--red); margin-top: 2px; }
+/* mobile dropdown */
+.m-dropdown{position:absolute;left:0;right:0;background:#fff;border:1px solid var(--green);border-top:none;z-index:10;box-shadow:0 4px 10px rgba(0,0,0,.10);}
+.m-drop-item{display:flex;justify-content:space-between;align-items:center;padding:5px 7px;border-bottom:1px solid var(--border);cursor:pointer;}
+.m-drop-hovered{background:var(--green-light);}
+.m-drop-name{font-size:7.5px;font-weight:500;color:var(--text);}
+.m-drop-cat{font-size:6px;color:var(--text-3);margin-top:1px;}
+.m-drop-kcal{font-size:7px;color:var(--green);font-weight:500;}
+.m-drop-add{font-size:6px;background:var(--green);color:#fff;padding:2px 5px;font-weight:600;}
+.m-drop-footer{font-size:6px;color:var(--text-3);padding:4px 7px;background:#fafafa;text-align:right;}
+.d-common-chip{background:#f5f5f5;border:1px solid var(--border);padding:5px 7px;font-size:8px;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .12s;}
+.d-common-chip:hover{background:var(--green-light);border-color:var(--green-border);}
+.d-chip-kcal{font-size:7px;color:var(--text-3);font-weight:400;}
 
-  .pw-bar { display: flex; gap: 2px; height: 3px; margin-top: 3px; }
-  .pw-seg { flex: 1; border-radius: 2px; background: var(--border); }
-  .pw-seg.g { background: var(--green); }
-  .pw-seg.a { background: var(--amber); }
+/* search dropdown */
+.d-dropdown{position:absolute;left:0;right:0;background:#fff;border:1px solid var(--green);border-top:none;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.10);}
+.d-drop-item{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border);cursor:pointer;}
+.d-drop-item.hovered{background:var(--green-light);}
+.d-drop-left{display:flex;flex-direction:column;gap:1px;}
+.d-drop-name{font-size:8.5px;font-weight:500;color:var(--text);}
+.d-drop-cat{font-size:7px;color:var(--text-3);}
+.d-drop-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.d-drop-kcal{font-size:8px;color:var(--green);font-weight:500;}
+.d-drop-add{font-size:7.5px;background:var(--green);color:#fff;padding:2px 7px;font-weight:600;cursor:pointer;}
+.d-drop-footer{font-size:7px;color:var(--text-3);padding:5px 10px;background:#fafafa;text-align:right;}
 
-  .p-btn { height: 18px; background: var(--green); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 7.5px; font-weight: 600; color: #fff; margin-top: 7px; }
-  .p-btn.disabled { background: var(--green-border); }
-  .p-btn.blue { background: var(--blue); }
+/* log table */
+.d-log-table{width:100%;}
+.d-log-header{display:grid;grid-template-columns:1fr 80px 90px 24px;font-size:7px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;padding:3px 0;border-bottom:2px solid var(--border);}
+.d-log-row{display:grid;grid-template-columns:1fr 80px 90px 24px;font-size:8.5px;color:var(--text);padding:5px 0;border-bottom:1px solid var(--border);align-items:center;}
+.d-log-total{display:grid;grid-template-columns:1fr 80px 90px 24px;font-size:8.5px;padding:6px 0 0;font-weight:600;color:var(--text);}
+.d-log-del{font-size:8px;color:var(--text-3);cursor:pointer;text-align:center;}
+.d-log-del:hover{color:var(--red);}
 
-  .p-divider { display: flex; align-items: center; gap: 5px; margin: 7px 0; }
-  .p-div-line { flex: 1; height: 1px; background: var(--border); }
-  .p-div-txt { font-size: 6px; color: var(--text-3); }
+/* desktop weight */
+.d-weight-body{display:flex;height:320px;}
+.d-weight-left{flex:1;padding:12px;border-right:1px solid var(--border);}
+.d-weight-right{width:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;}
+.d-weight-big{font-size:32px;font-weight:600;color:var(--green);line-height:1;}
+.d-weight-sub{font-size:9px;color:var(--text-2);margin-bottom:8px;}
+.d-prog-bar{height:7px;background:var(--green-light);overflow:hidden;margin:6px 0 3px;}
+.d-prog-fill{height:100%;background:var(--green);}
+.d-prog-labels{display:flex;justify-content:space-between;font-size:7.5px;color:var(--text-3);}
+.d-w-row{display:flex;gap:5px;margin-top:10px;}
+.d-w-input{flex:1;height:22px;background:#f5f5f5;border:1px solid var(--border);}
+.d-w-btn{height:22px;background:var(--green);padding:0 8px;font-size:8.5px;font-weight:600;color:#fff;display:flex;align-items:center;}
+.d-hist-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:8.5px;}
+.d-hist-date{color:var(--text-3);}
+.d-hist-kg{color:var(--text);}
+.d-hist-dn{color:var(--green);}
+.d-hist-up{color:var(--red);}
 
-  .p-social { height: 16px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 7px; color: var(--text-2); margin-bottom: 4px; }
-  .p-link { text-align: center; font-size: 6.5px; color: var(--text-3); margin-top: 6px; }
-  .p-link span { color: var(--green); }
+/* desktop exercise */
+.d-ex-body{display:flex;height:320px;}
+.d-ex-left{flex:1;padding:10px;border-right:1px solid var(--border);}
+.d-ex-right{width:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
+.d-ex-card{background:#f5f5f5;padding:6px 8px;margin-bottom:4px;}
+.d-ex-top{display:flex;justify-content:space-between;align-items:center;}
+.d-ex-name{font-size:9px;font-weight:600;color:var(--text);}
+.d-ex-kcal{font-size:8.5px;color:var(--red);font-weight:600;}
+.d-ex-dur{font-size:7.5px;color:var(--text-3);margin-top:1px;}
+.d-add-btn{height:22px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#fff;margin-top:6px;}
 
-  .p-check-row { display: flex; align-items: flex-start; gap: 4px; margin-top: 5px; }
-  .p-checkbox { width: 9px; height: 9px; border: 1px solid var(--border); border-radius: 2px; flex-shrink: 0; background: var(--green); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
-  .p-check-txt { font-size: 5.5px; color: var(--text-3); line-height: 1.4; }
-  .p-check-txt span { color: var(--green); }
+/* desktop water */
+.d-water-body{display:flex;height:320px;}
+.d-water-left{flex:1;padding:12px;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.d-water-right{width:180px;padding:12px;}
+.d-water-big{font-size:34px;font-weight:600;color:var(--blue-dark);line-height:1;}
+.d-water-sub{font-size:9px;color:var(--blue-dark);margin-bottom:3px;}
+.d-water-goal{font-size:8px;color:var(--blue-dark);opacity:.7;margin-bottom:8px;}
+.d-water-bar{height:7px;background:#B5D4F4;overflow:hidden;margin:6px 0;width:100%;}
+.d-water-fill{height:100%;background:var(--blue);}
+.d-water-labels{display:flex;justify-content:space-between;font-size:7.5px;color:var(--blue-dark);margin-bottom:8px;width:100%;}
+.d-water-btns{display:grid;grid-template-columns:1fr 1fr;gap:4px;width:100%;}
+.d-water-btn{height:24px;background:var(--blue-light);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:8.5px;color:var(--blue-dark);font-weight:500;}
+.d-custom-btn{height:22px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#fff;margin-top:5px;}
 
-  /* OTP */
-  .otp-row { display: flex; gap: 4px; justify-content: center; margin: 8px 0; }
-  .otp-box { width: 20px; height: 26px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--green-dark); }
-  .otp-box.filled { background: var(--green-light); border-color: var(--green); }
-  .otp-box.active { border-color: var(--green); }
+/* phone internals */
+.p-back{display:flex;align-items:center;gap:4px;margin-bottom:6px;}
+.p-back-icon{font-size:12px;color:var(--text-3);}
+.p-screen-h{font-size:10px;font-weight:600;color:var(--text);}
+.p-logo-wrap{text-align:center;padding:8px 0 6px;}
+.p-logo{width:36px;height:36px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:18px;}
+.p-app-name{font-size:12px;font-weight:600;color:var(--text);}
+.p-app-sub{font-size:7px;color:var(--text-3);margin-top:1px;}
+.p-field{margin-bottom:5px;}
+.p-label{font-size:6.5px;font-weight:600;color:var(--text-2);margin-bottom:2px;letter-spacing:.04em;text-transform:uppercase;}
+.p-input{height:16px;background:#f5f5f5;border:1px solid var(--border);padding:0 6px;font-size:7px;color:var(--text-3);display:flex;align-items:center;justify-content:space-between;}
+.p-btn{height:18px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:600;color:#fff;margin-top:7px;cursor:pointer;}
+.p-btn.blue{background:var(--blue);}
+.p-divider{display:flex;align-items:center;gap:5px;margin:6px 0;}
+.p-div-line{flex:1;height:1px;background:var(--border);}
+.p-div-txt{font-size:6px;color:var(--text-3);}
+.p-social{height:15px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:4px;font-size:7px;color:var(--text-2);margin-bottom:4px;}
+.p-link{text-align:center;font-size:6.5px;color:var(--text-3);margin-top:5px;}
+.p-link span{color:var(--green);}
+.p-set-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.p-set-key{font-size:7px;color:var(--text-2);}
+.p-set-val{height:13px;width:52px;background:#f5f5f5;border:1px solid var(--border);}
+.computed-card{background:var(--green-light);padding:6px 8px;margin-top:7px;}
+.computed-label{font-size:6px;font-weight:600;color:var(--green-deep);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase;}
+.computed-row{display:flex;justify-content:space-around;}
+.computed-item{text-align:center;}
+.computed-num{font-size:13px;font-weight:600;color:var(--green-dark);}
+.computed-sub{font-size:5.5px;color:var(--green-dark);}
+.hero-card{background:var(--green-light);padding:8px;margin-bottom:6px;}
+.hero-week{font-size:6px;color:var(--green-deep);font-weight:600;margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase;}
+.hero-stats{display:flex;justify-content:space-around;align-items:center;}
+.hero-num{text-align:center;}
+.hero-n{font-size:14px;font-weight:600;color:var(--green-dark);}
+.hero-l{font-size:6px;color:var(--green-dark);}
+.hero-div{width:1px;height:28px;background:var(--green-border);}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.mini-card{background:#f5f5f5;padding:6px;}
+.mc-title{font-size:7px;font-weight:600;color:var(--text);}
+.mc-sub{font-size:5.5px;color:var(--text-3);margin-bottom:3px;}
+.mc-val{font-size:10px;font-weight:600;color:var(--text);}
+.mc-unit{font-size:5.5px;color:var(--text-2);}
+.mc-bar{height:3px;background:var(--border);overflow:hidden;margin-top:4px;}
+.mc-fill{height:100%;}
+.tab-bar{display:flex;justify-content:space-around;border-top:1px solid var(--border);padding:5px 0 3px;margin-top:6px;}
+.tab{font-size:6px;color:var(--text-3);text-align:center;}
+.tab.on{color:var(--green);font-weight:600;}
+.tab-icon{font-size:12px;display:block;}
+.goal-banner{background:var(--green-light);padding:7px 8px;margin-bottom:6px;}
+.gb-lbl{font-size:6px;font-weight:600;color:var(--green-deep);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase;}
+.gb-row{display:flex;justify-content:space-around;align-items:center;}
+.gb-item{text-align:center;}
+.gb-num{font-size:13px;font-weight:600;color:var(--green-dark);}
+.gb-sub{font-size:5.5px;color:var(--green-dark);}
+.gb-div{width:1px;height:26px;background:var(--green-border);}
+.ring-row{display:flex;align-items:center;gap:8px;background:#f5f5f5;padding:7px 8px;margin-bottom:6px;}
+.ring-info{flex:1;min-width:0;}
+.ring-title{font-size:7px;font-weight:600;color:var(--text);}
+.ring-val{font-size:10px;font-weight:600;color:var(--green);}
+.ring-val span{font-size:6px;font-weight:400;color:var(--text-2);}
+.ring-status{font-size:5.5px;color:var(--text-3);margin-top:1px;}
+.search-bar{height:16px;background:#f5f5f5;border:1px solid var(--border);display:flex;align-items:center;gap:4px;padding:0 6px;margin-bottom:5px;font-size:7px;color:var(--text-3);}
+.food-item{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);}
+.food-name{font-size:7px;color:var(--text);}
+.food-kcal{font-size:6px;color:var(--green);}
+.food-add{font-size:5.5px;background:var(--green-light);color:var(--green-deep);padding:1px 5px;font-weight:600;}
+.total-row{display:flex;justify-content:space-between;margin-top:6px;padding-top:4px;border-top:1px solid var(--border);}
+.total-lbl{font-size:7px;font-weight:600;color:var(--text);}
+.total-val{font-size:7px;font-weight:600;color:var(--green);}
+.weight-big{text-align:center;padding:6px 0 4px;}
+.weight-num{font-size:26px;font-weight:600;color:var(--green);}
+.weight-unit{font-size:9px;color:var(--text-2);}
+.prog-bar{height:6px;background:var(--green-light);overflow:hidden;margin:5px 0;}
+.prog-fill{height:100%;background:var(--green);}
+.prog-labels{display:flex;justify-content:space-between;font-size:5.5px;color:var(--text-3);margin-bottom:5px;}
+.w-input-row{display:flex;gap:4px;margin-bottom:6px;}
+.w-input{flex:1;height:16px;background:#f5f5f5;border:1px solid var(--border);}
+.w-btn-small{height:16px;background:var(--green);padding:0 7px;font-size:7px;font-weight:600;color:#fff;display:flex;align-items:center;}
+.hist-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);}
+.hist-date{font-size:6.5px;color:var(--text-3);}
+.hist-kg{font-size:7px;color:var(--text);}
+.hist-dn{font-size:6px;color:var(--green);}
+.hist-up{font-size:6px;color:var(--red);}
+.ex-card{background:#f5f5f5;padding:5px 6px;margin-bottom:4px;}
+.ex-top{display:flex;justify-content:space-between;}
+.ex-name{font-size:7px;font-weight:600;color:var(--text);}
+.ex-kcal{font-size:6.5px;color:var(--red);font-weight:600;}
+.ex-dur{font-size:6px;color:var(--text-3);margin-top:1px;}
+.water-ring-row{display:flex;align-items:center;gap:8px;background:var(--blue-light);padding:7px 8px;margin-bottom:5px;}
+.water-big{font-size:16px;font-weight:600;color:var(--blue-dark);}
+.water-unit{font-size:8px;color:var(--blue-dark);}
+.water-goal-txt{font-size:5.5px;color:var(--blue-dark);margin-top:2px;}
+.water-bar{height:5px;background:#B5D4F4;overflow:hidden;margin:5px 0;}
+.water-fill{height:100%;background:var(--blue);}
+.water-btns{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.water-btn{height:18px;background:var(--blue-light);border:1px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--blue-dark);font-weight:500;}
+.water-tip{font-size:5.5px;color:var(--text-3);text-align:center;margin-top:5px;font-style:italic;}
 
-  .step-dots { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
-  .s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
-  .s-dot.active { width: 14px; border-radius: 4px; background: var(--green); }
+/* spec card */
+.spec-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem;margin-top:1.5rem;}
+.spec-card h3{font-size:14px;font-weight:600;margin-bottom:1rem;}
+.spec-card h4{font-size:12px;font-weight:600;margin:1.2rem 0 .5rem;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:.5rem;}
+th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:6px 10px;border-bottom:2px solid var(--border);}
+td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text-2);}
+tr:last-child td{border-bottom:none;}
+code{font-family:var(--mono);font-size:11.5px;background:#f0f0f0;padding:1px 5px;color:var(--green-dark);}
+pre{font-family:var(--mono);font-size:12px;background:#f7f7f5;border:1px solid var(--border);padding:1rem;overflow-x:auto;line-height:1.7;color:var(--text-2);margin:.75rem 0;}
+pre b{color:var(--green);font-weight:500;}
+ul{padding-left:1.2rem;font-size:13px;color:var(--text-2);}
+li{margin-bottom:4px;line-height:1.5;}
+.note{font-size:12px;color:var(--text-3);font-style:italic;margin-top:6px;padding-left:1rem;border-left:3px solid var(--green-border);line-height:1.5;}
+.color-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.chip{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);}
+.chip-dot{width:14px;height:14px;border:1px solid rgba(0,0,0,.08);flex-shrink:0;}
+.flow-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:.75rem;}
+.pill{background:var(--green-light);border:1px solid var(--green-border);padding:4px 12px;font-size:12px;color:var(--green-deep);font-weight:500;}
+.pill.blue{background:var(--blue-light);border-color:var(--blue-border);color:var(--blue-dark);}
+.pill-arrow{font-size:14px;color:var(--text-3);}
+footer{text-align:center;padding:2.5rem 1rem;font-size:12px;color:var(--text-3);border-top:1px solid var(--border);margin-top:2rem;}
 
-  /* success */
-  .p-success { text-align: center; padding: 8px 4px; }
-  .p-success-icon { width: 40px; height: 40px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 22px; }
-  .p-success-title { font-size: 11px; font-weight: 600; margin-bottom: 3px; }
-  .p-success-sub { font-size: 6.5px; color: var(--text-2); line-height: 1.5; margin-bottom: 8px; }
-  .p-next-card { background: var(--green-light); border-radius: 6px; padding: 7px 8px; text-align: left; margin-bottom: 8px; }
-  .p-next-title { font-size: 6px; font-weight: 600; color: var(--green-deep); margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
-  .p-next-row { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
-  .p-next-num { width: 14px; height: 14px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 6.5px; font-weight: 600; color: #fff; flex-shrink: 0; }
-  .p-next-txt { font-size: 6.5px; color: var(--green-dark); }
-
-  /* profile */
-  .p-set-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-  .p-set-key { font-size: 7px; color: var(--text-2); }
-  .p-set-val { height: 13px; width: 52px; background: #f5f5f5; border: 1px solid var(--border); border-radius: 3px; }
-  .computed-card { background: var(--green-light); border-radius: 6px; padding: 6px 8px; margin-top: 7px; }
-  .computed-label { font-size: 6px; font-weight: 600; color: var(--green-deep); margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
-  .computed-row { display: flex; justify-content: space-around; }
-  .computed-item { text-align: center; }
-  .computed-num { font-size: 13px; font-weight: 600; color: var(--green-dark); }
-  .computed-sub { font-size: 5.5px; color: var(--green-dark); }
-
-  /* home */
-  .hero-card { background: var(--green-light); border-radius: 8px; padding: 8px; margin-bottom: 6px; }
-  .hero-week { font-size: 6px; color: var(--green-deep); font-weight: 600; margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
-  .hero-stats { display: flex; justify-content: space-around; align-items: center; }
-  .hero-num { text-align: center; }
-  .hero-n { font-size: 14px; font-weight: 600; color: var(--green-dark); }
-  .hero-l { font-size: 6px; color: var(--green-dark); }
-  .hero-div { width: 1px; height: 28px; background: var(--green-border); }
-  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-  .mini-card { background: #f5f5f5; border-radius: 8px; padding: 6px; }
-  .mc-title { font-size: 7px; font-weight: 600; color: var(--text); }
-  .mc-sub { font-size: 5.5px; color: var(--text-3); margin-bottom: 3px; }
-  .mc-val { font-size: 10px; font-weight: 600; color: var(--text); }
-  .mc-unit { font-size: 5.5px; color: var(--text-2); }
-  .mc-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 4px; }
-  .mc-fill { height: 100%; border-radius: 2px; }
-  .tab-bar { display: flex; justify-content: space-around; border-top: 1px solid var(--border); padding: 5px 0 3px; margin-top: 6px; }
-  .tab { font-size: 6px; color: var(--text-3); text-align: center; }
-  .tab.on { color: var(--green); font-weight: 600; }
-  .tab-icon { font-size: 13px; display: block; }
-
-  /* goal banner */
-  .goal-banner { background: var(--green-light); border-radius: 7px; padding: 7px 8px; margin-bottom: 6px; }
-  .gb-lbl { font-size: 6px; font-weight: 600; color: var(--green-deep); margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
-  .gb-row { display: flex; justify-content: space-around; align-items: center; }
-  .gb-item { text-align: center; }
-  .gb-num { font-size: 13px; font-weight: 600; color: var(--green-dark); }
-  .gb-sub { font-size: 5.5px; color: var(--green-dark); }
-  .gb-div { width: 1px; height: 26px; background: var(--green-border); }
-
-  /* ring */
-  .ring-row { display: flex; align-items: center; gap: 8px; background: #f5f5f5; border-radius: 7px; padding: 7px 8px; margin-bottom: 6px; }
-  .ring-info { flex: 1; min-width: 0; }
-  .ring-title { font-size: 7px; font-weight: 600; color: var(--text); }
-  .ring-val { font-size: 10px; font-weight: 600; color: var(--green); }
-  .ring-val span { font-size: 6px; font-weight: 400; color: var(--text-2); }
-  .ring-status { font-size: 5.5px; color: var(--text-3); margin-top: 1px; }
-
-  /* search */
-  .search-bar { height: 16px; background: #f5f5f5; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; gap: 4px; padding: 0 6px; margin-bottom: 5px; font-size: 7px; color: var(--text-3); }
-
-  /* food */
-  .food-item { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid var(--border); }
-  .food-name { font-size: 7px; color: var(--text); }
-  .food-kcal { font-size: 6px; color: var(--green); }
-  .food-add { font-size: 5.5px; background: var(--green-light); color: var(--green-deep); padding: 1px 5px; border-radius: 3px; font-weight: 600; }
-  .total-row { display: flex; justify-content: space-between; margin-top: 6px; padding-top: 4px; border-top: 1px solid var(--border); }
-  .total-lbl { font-size: 7px; font-weight: 600; color: var(--text); }
-  .total-val { font-size: 7px; font-weight: 600; color: var(--green); }
-
-  /* weight */
-  .weight-big { text-align: center; padding: 6px 0 4px; }
-  .weight-num { font-size: 26px; font-weight: 600; color: var(--green); }
-  .weight-unit { font-size: 9px; color: var(--text-2); }
-  .prog-bar { height: 6px; background: var(--green-light); border-radius: 3px; overflow: hidden; margin: 5px 0; }
-  .prog-fill { height: 100%; background: var(--green); border-radius: 3px; }
-  .prog-labels { display: flex; justify-content: space-between; font-size: 5.5px; color: var(--text-3); margin-bottom: 5px; }
-  .w-input-row { display: flex; gap: 4px; margin-bottom: 6px; }
-  .w-input { flex: 1; height: 16px; background: #f5f5f5; border: 1px solid var(--border); border-radius: 4px; }
-  .w-btn-small { height: 16px; background: var(--green); border-radius: 4px; padding: 0 7px; font-size: 7px; font-weight: 600; color: #fff; display: flex; align-items: center; white-space: nowrap; }
-  .hist-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--border); }
-  .hist-date { font-size: 6.5px; color: var(--text-3); }
-  .hist-kg { font-size: 7px; color: var(--text); }
-  .hist-up { font-size: 6px; color: var(--red); }
-  .hist-dn { font-size: 6px; color: var(--green); }
-
-  /* exercise */
-  .ex-card { background: #f5f5f5; border-radius: 5px; padding: 5px 6px; margin-bottom: 4px; }
-  .ex-top { display: flex; justify-content: space-between; }
-  .ex-name { font-size: 7px; font-weight: 600; color: var(--text); }
-  .ex-kcal { font-size: 6.5px; color: var(--red); font-weight: 600; }
-  .ex-dur { font-size: 6px; color: var(--text-3); margin-top: 1px; }
-
-  /* water */
-  .water-ring-row { display: flex; align-items: center; gap: 8px; background: var(--blue-light); border-radius: 7px; padding: 7px 8px; margin-bottom: 5px; }
-  .water-big { font-size: 16px; font-weight: 600; color: var(--blue-dark); }
-  .water-unit { font-size: 8px; color: var(--blue-dark); }
-  .water-goal-txt { font-size: 5.5px; color: var(--blue-dark); margin-top: 2px; }
-  .water-bar { height: 5px; background: #B5D4F4; border-radius: 3px; overflow: hidden; margin: 5px 0; }
-  .water-fill { height: 100%; background: var(--blue); border-radius: 3px; }
-  .water-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-  .water-btn { height: 18px; background: var(--blue-light); border: 1px solid var(--blue-border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 7px; color: var(--blue-dark); font-weight: 500; }
-  .water-tip { font-size: 5.5px; color: var(--text-3); text-align: center; margin-top: 5px; font-style: italic; }
-
-  /* ── WRITTEN SPEC ── */
-  .spec-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 1.5rem;
-  }
-  .spec-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
-  .spec-card h4 { font-size: 12px; font-weight: 600; margin: 1.2rem 0 0.5rem; color: var(--text); }
-
-  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 0.5rem; }
-  th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); padding: 6px 10px; border-bottom: 2px solid var(--border); }
-  td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text-2); line-height: 1.5; }
-  tr:last-child td { border-bottom: none; }
-  code { font-family: var(--mono); font-size: 11.5px; background: #f0f0f0; padding: 1px 5px; border-radius: 3px; color: var(--green-dark); }
-  pre { font-family: var(--mono); font-size: 12px; background: #f7f7f5; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; line-height: 1.7; color: var(--text-2); margin: 0.75rem 0; }
-  pre b { color: var(--green); font-weight: 500; }
-  ul { padding-left: 1.2rem; font-size: 13px; color: var(--text-2); }
-  li { margin-bottom: 4px; line-height: 1.5; }
-  .note { font-size: 12px; color: var(--text-3); font-style: italic; margin-top: 6px; padding-left: 1rem; border-left: 3px solid var(--green-border); line-height: 1.5; }
-
-  .color-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-  .chip { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-2); }
-  .chip-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); flex-shrink: 0; }
-
-  .flow-pills { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.75rem; }
-  .pill { background: var(--green-light); border: 1px solid var(--green-border); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--green-deep); font-weight: 500; }
-  .pill.blue { background: var(--blue-light); border-color: var(--blue-border); color: var(--blue-dark); }
-  .pill-arrow { font-size: 14px; color: var(--text-3); }
-
-  footer { text-align: center; padding: 2.5rem 1rem; font-size: 12px; color: var(--text-3); border-top: 1px solid var(--border); margin-top: 2rem; }
+/* sidebar state annotation badges */
+.state-badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;margin-bottom:6px;letter-spacing:.04em;}
+.state-badge.collapsed{background:#f0f0f0;color:var(--text-3);}
+.state-badge.expanded{background:var(--green-light);color:var(--green-dark);}
 </style>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-inner">
     <div class="header-tag">UI Design Specification</div>
     <div class="header-title">🌿 FitTrack</div>
-    <div class="header-sub">Complete design handoff document for frontend engineers</div>
+    <div class="header-sub">Complete design handoff — mobile &amp; desktop · For frontend engineers</div>
     <div class="header-meta">
-      <div class="meta-pill">Version 1.0</div>
-      <div class="meta-pill">10 Screens</div>
-      <div class="meta-pill">Mobile-first</div>
-      <div class="meta-pill">iOS &amp; Android</div>
+      <div class="meta-pill">Version 1.2</div>
+      <div class="meta-pill">Returning User Flow</div>
+      <div class="meta-pill">Mobile + Desktop (Collapsed &amp; Expanded)</div>
+      <div class="meta-pill">9 Screens</div>
     </div>
   </div>
 </header>
-
 <div class="page">
 
-  <!-- TOC -->
-  <nav class="toc">
-    <div class="toc-header">Contents</div>
-    <a class="toc-item" href="#tokens">1. Design Tokens</a>
-    <a class="toc-item" href="#flow">2. User Flow</a>
-    <a class="toc-item" href="#register">3. Register Flow</a>
-    <a class="toc-item" href="#login">4. Login</a>
-    <a class="toc-item" href="#profile">5. Profile Setup</a>
-    <a class="toc-item" href="#home">6. Home Dashboard</a>
-    <a class="toc-item" href="#diet">7. Diet Log</a>
-    <a class="toc-item" href="#weight">8. Weight Log</a>
-    <a class="toc-item" href="#exercise">9. Exercise Log</a>
-    <a class="toc-item" href="#water">10. Water Log</a>
-    <a class="toc-item" href="#formulas">11. Goal Formulas</a>
-    <a class="toc-item" href="#rules">12. Interaction Rules</a>
-  </nav>
+<nav class="toc">
+  <div class="toc-header">Contents</div>
+  <a class="toc-item" href="#tokens">1. Design Tokens</a>
+  <a class="toc-item" href="#flow">2. User Flow</a>
+  <a class="toc-item" href="#login">3. Login</a>
+  <a class="toc-item" href="#profile">4. Profile Setup</a>
+  <a class="toc-item" href="#home">5. Home Dashboard</a>
+  <a class="toc-item" href="#diet">6. Diet Log</a>
+  <a class="toc-item" href="#weight">7. Weight Log</a>
+  <a class="toc-item" href="#exercise">8. Exercise Log</a>
+  <a class="toc-item" href="#water">9. Water Log</a>
+  <a class="toc-item" href="#formulas">10. Goal Formulas</a>
+  <a class="toc-item" href="#rules">11. Interaction Rules</a>
+</nav>
 
-  <!-- 1. DESIGN TOKENS -->
-  <section class="spec-section" id="tokens">
-    <div class="section-header">
-      <div class="section-num">1</div>
-      <div class="section-title">Design Tokens</div>
+<!-- ════════════════ 1. TOKENS ════════════════ -->
+<section class="spec-section" id="tokens">
+  <div class="section-header"><div class="section-num">1</div><div class="section-title">Design Tokens</div></div>
+  <div class="spec-card">
+    <h3>Colors</h3>
+    <div class="color-chips">
+      <div class="chip"><div class="chip-dot" style="background:#1D9E75"></div>Primary Green <code>#1D9E75</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#E1F5EE"></div>Light Green BG <code>#E1F5EE</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#9FE1CB"></div>Green Border <code>#9FE1CB</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#0F6E56"></div>Dark Green Text <code>#0F6E56</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#378ADD"></div>Water Blue <code>#378ADD</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#E6F1FB"></div>Light Blue BG <code>#E6F1FB</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#185FA5"></div>Dark Blue Text <code>#185FA5</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#E24B4A"></div>Calories Red <code>#E24B4A</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#BA7517"></div>Amber Warning <code>#BA7517</code></div>
+      <div class="chip"><div class="chip-dot" style="background:#f5f5f5;border:1px solid #e8e8e8"></div>Card BG <code>#f5f5f5</code></div>
     </div>
-    <div class="spec-card">
-      <h3>Colors</h3>
-      <div class="color-chips">
-        <div class="chip"><div class="chip-dot" style="background:#1D9E75"></div>Primary Green <code>#1D9E75</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#E1F5EE"></div>Light Green BG <code>#E1F5EE</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#9FE1CB"></div>Green Border <code>#9FE1CB</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#0F6E56"></div>Dark Green Text <code>#0F6E56</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#378ADD"></div>Water Blue <code>#378ADD</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#E6F1FB"></div>Light Blue BG <code>#E6F1FB</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#E24B4A"></div>Calories Red <code>#E24B4A</code></div>
-        <div class="chip"><div class="chip-dot" style="background:#BA7517"></div>Amber Warning <code>#BA7517</code></div>
+    <h4>Typography</h4>
+    <table><thead><tr><th>Usage</th><th>Weight</th></tr></thead><tbody>
+      <tr><td>Body text, labels, hints</td><td><code>400</code></td></tr>
+      <tr><td>Headings, buttons, numbers</td><td><code>500 / 600</code></td></tr>
+    </tbody></table>
+    <h4>Desktop Sidebar States</h4>
+    <table><thead><tr><th>State</th><th>Width</th><th>Content</th><th>Trigger</th></tr></thead><tbody>
+      <tr><td><span class="state-badge collapsed">Collapsed</span></td><td><code>36px</code></td><td>Icons only</td><td>Default on page load</td></tr>
+      <tr><td><span class="state-badge expanded">Expanded</span></td><td><code>128px</code></td><td>Icons + labels</td><td>Click ☰ toggle button</td></tr>
+    </tbody></table>
+    <p class="note">Transition: width 220ms ease · Label fade-in: opacity 150ms ease (60ms delay)</p>
+  </div>
+</section>
+
+<!-- ════════════════ 2. FLOW ════════════════ -->
+<section class="spec-section" id="flow">
+  <div class="section-header"><div class="section-num">2</div><div class="section-title">User Flow — Returning User</div></div>
+  <div class="spec-card">
+    <div class="flow-pills">
+      <div class="pill">Login</div><div class="pill-arrow">→</div>
+      <div class="pill blue">Profile Setup</div><div class="pill-arrow">→</div>
+      <div class="pill blue">Home Dashboard</div><div class="pill-arrow">→</div>
+      <div class="pill">Diet / Weight / Exercise / Water</div>
+    </div>
+    <p class="note" style="margin-top:1rem;">Profile Setup appears after login if not yet completed, or any time via Settings → Profile. Once saved, subsequent logins go directly to Home Dashboard.</p>
+  </div>
+</section>
+
+<!-- ════════════════ 3. LOGIN ════════════════ -->
+<section class="spec-section" id="login">
+  <div class="section-header"><div class="section-num">3</div><div class="section-title">Login</div></div>
+  <div class="mockup-row">
+    <!-- MOBILE -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Login</div>
+        <div class="phone-body">
+          <div class="p-logo-wrap"><div class="p-logo">🌿</div><div class="p-app-name">FitTrack</div><div class="p-app-sub">Welcome back</div></div>
+          <div class="p-field"><div class="p-label">Email</div><div class="p-input"><span>Enter your email</span></div></div>
+          <div class="p-field"><div class="p-label">Password</div><div class="p-input"><span>••••••••</span><span style="font-size:9px">👁</span></div></div>
+          <div style="text-align:right;font-size:6.5px;color:var(--green);margin-bottom:2px;">Forgot password?</div>
+          <div class="p-btn">Log in</div>
+          <div class="p-divider"><div class="p-div-line"></div><div class="p-div-txt">or continue with</div><div class="p-div-line"></div></div>
+          <div class="p-social">🇬 Google</div><div class="p-social">🍎 Apple</div>
+        </div>
       </div>
-      <h4>Border Radius</h4>
-      <table><thead><tr><th>Element</th><th>Value</th></tr></thead><tbody>
-        <tr><td>Buttons / Inputs</td><td><code>8px</code></td></tr>
-        <tr><td>Cards</td><td><code>12px</code></td></tr>
-        <tr><td>Avatar / Dot</td><td><code>50%</code></td></tr>
-      </tbody></table>
-      <h4>Typography</h4>
-      <table><thead><tr><th>Usage</th><th>Weight</th></tr></thead><tbody>
-        <tr><td>Body text, labels, hints</td><td><code>400</code></td></tr>
-        <tr><td>Headings, buttons, numbers</td><td><code>500 / 600</code></td></tr>
-      </tbody></table>
+      <div class="mockup-note">Centered single column. Success → Profile Setup or Home.</div>
     </div>
-  </section>
-
-  <!-- 2. USER FLOW -->
-  <section class="spec-section" id="flow">
-    <div class="section-header">
-      <div class="section-num">2</div>
-      <div class="section-title">User Flow Overview</div>
-    </div>
-    <div class="spec-card">
-      <h3>New User</h3>
-      <div class="flow-pills">
-        <div class="pill">Sign Up</div><div class="pill-arrow">→</div>
-        <div class="pill">Verify Email</div><div class="pill-arrow">→</div>
-        <div class="pill">Account Ready</div><div class="pill-arrow">→</div>
-        <div class="pill blue">Profile Setup</div><div class="pill-arrow">→</div>
-        <div class="pill blue">Home Dashboard</div>
-      </div>
-      <h3 style="margin-top:1.2rem;">Returning User</h3>
-      <div class="flow-pills">
-        <div class="pill">Login</div><div class="pill-arrow">→</div>
-        <div class="pill blue">Home Dashboard</div>
-      </div>
-      <p class="note" style="margin-top:1rem;">Profile Setup can be skipped. If skipped, all Home cards display "Complete your profile to unlock personalised goals" until the user fills it in from Settings.</p>
-    </div>
-  </section>
-
-  <!-- 3. REGISTER FLOW -->
-  <section class="spec-section" id="register">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <div class="section-title">Register Flow</div>
-    </div>
-
-    <div class="screen-grid">
-
-      <!-- Sign Up -->
-      <div class="screen-col">
-        <div class="screen-label">① Sign Up</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Sign Up</div>
-          <div class="phone-body">
-            <div class="p-logo-wrap">
-              <div class="p-logo">🌿</div>
-              <div class="p-app-name">FitTrack</div>
-              <div class="p-app-sub">Create your account</div>
-            </div>
-            <div class="p-field">
-              <div class="p-label">Full name</div>
-              <div class="p-input ok"><span style="color:#1a1a1a">Zhang Wei</span><span style="font-size:9px;color:var(--green)">✓</span></div>
-            </div>
-            <div class="p-field">
-              <div class="p-label">Email</div>
-              <div class="p-input err"><span>zhangwei@gmai…</span><span style="font-size:9px;color:var(--red)">!</span></div>
-              <div class="p-hint">Please enter a valid email address</div>
-            </div>
-            <div class="p-field">
-              <div class="p-label">Password</div>
-              <div class="p-input"><span>••••••••</span><span style="font-size:9px;color:var(--text-3)">👁</span></div>
-              <div class="pw-bar"><div class="pw-seg g"></div><div class="pw-seg g"></div><div class="pw-seg a"></div><div class="pw-seg"></div></div>
-              <div style="display:flex;justify-content:space-between;font-size:5.5px;color:var(--text-3);margin-top:2px;"><span>Min 8 characters</span><span style="color:var(--amber)">Medium</span></div>
-            </div>
-            <div class="p-field">
-              <div class="p-label">Confirm password</div>
-              <div class="p-input"><span>••••••••</span></div>
-            </div>
-            <div class="p-check-row">
-              <div class="p-checkbox"><span style="font-size:5px;color:#fff">✓</span></div>
-              <div class="p-check-txt">I agree to the <span>Terms of Service</span> and <span>Privacy Policy</span></div>
-            </div>
-            <div class="p-btn">Create account</div>
-            <div class="p-divider"><div class="p-div-line"></div><div class="p-div-txt">or continue with</div><div class="p-div-line"></div></div>
-            <div class="p-social">🇬 Google</div>
-            <div class="p-social"> Apple</div>
-            <div class="p-link">Already have an account? <span>Log in</span></div>
+    <!-- DESKTOP (no sidebar on login) -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="desktop">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/login</div></div>
+        <div class="d-login-wrap">
+          <div class="d-login-left">
+            <div class="d-login-logo">🌿</div>
+            <div class="d-login-name">FitTrack</div>
+            <div class="d-login-sub">Track nutrition, weight, exercise &amp; hydration — all in one place.</div>
+          </div>
+          <div class="d-login-right">
+            <div class="d-login-title">Welcome back</div>
+            <div class="d-field"><div class="d-lbl">Email</div><div class="d-input"><span>Enter your email</span></div></div>
+            <div class="d-field"><div class="d-lbl">Password</div><div class="d-input"><span>••••••••</span><span style="font-size:10px">👁</span></div></div>
+            <div style="text-align:right;font-size:8px;color:var(--green);margin-top:3px;">Forgot password?</div>
+            <div class="d-btn">Log in</div>
+            <div class="d-divider"><div class="d-div-line"></div><div class="d-div-txt">or continue with</div><div class="d-div-line"></div></div>
+            <div class="d-social">🇬 Continue with Google</div>
+            <div class="d-social">🍎 Continue with Apple</div>
           </div>
         </div>
-        <div class="screen-note">Inline validation on field blur. Submit disabled until all fields valid + terms checked.</div>
       </div>
+      <div class="mockup-note">Split layout — brand panel left, form right. No sidebar on auth screens.</div>
+    </div>
+  </div>
+</section>
 
-      <div class="arrow">→</div>
-
-      <!-- Verify Email -->
-      <div class="screen-col">
-        <div class="screen-label">② Verify Email</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Verify Email</div>
-          <div class="phone-body">
-            <div class="p-logo-wrap">
-              <div class="p-logo" style="background:var(--blue-light)">✉️</div>
-              <div class="p-app-name">Check your inbox</div>
-              <div class="p-app-sub" style="text-align:center;line-height:1.5;">We sent a 6-digit code to<br><b style="color:#1a1a1a">zhangwei@gmail.com</b></div>
+<!-- ════════════════ 4. PROFILE SETUP ════════════════ -->
+<section class="spec-section" id="profile">
+  <div class="section-header"><div class="section-num">4</div><div class="section-title">Profile Setup</div></div>
+  <div class="mockup-row">
+    <!-- MOBILE -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Profile Setup</div>
+        <div class="phone-body">
+          <div style="font-size:9px;font-weight:600;margin-bottom:7px;">Your profile</div>
+          <div class="p-set-row"><span class="p-set-key">Age</span><div class="p-set-val"></div></div>
+          <div class="p-set-row"><span class="p-set-key">Gender</span><div class="p-set-val"></div></div>
+          <div class="p-set-row"><span class="p-set-key">Height (cm)</span><div class="p-set-val"></div></div>
+          <div class="p-set-row"><span class="p-set-key">Current weight (kg)</span><div class="p-set-val"></div></div>
+          <div class="p-set-row"><span class="p-set-key">Target weight (kg)</span><div class="p-set-val"></div></div>
+          <div class="p-set-row"><span class="p-set-key">Activity level</span><div class="p-set-val"></div></div>
+          <div class="computed-card">
+            <div class="computed-label">Auto-calculated goals</div>
+            <div class="computed-row">
+              <div class="computed-item"><div class="computed-num">1,580</div><div class="computed-sub">kcal / day</div></div>
+              <div style="width:1px;background:var(--green-border);"></div>
+              <div class="computed-item"><div class="computed-num">2,100</div><div class="computed-sub">ml / day</div></div>
             </div>
-            <div class="otp-row">
-              <div class="otp-box filled">3</div>
-              <div class="otp-box filled">8</div>
-              <div class="otp-box filled">5</div>
-              <div class="otp-box active">_</div>
-              <div class="otp-box"></div>
-              <div class="otp-box"></div>
+          </div>
+          <div class="p-btn" style="margin-top:8px;">Save &amp; continue →</div>
+        </div>
+      </div>
+      <div class="mockup-note">Goals card updates live as fields change.</div>
+    </div>
+    <!-- DESKTOP (no sidebar on setup) -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="desktop">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/setup</div></div>
+        <div class="d-profile-wrap">
+          <div class="d-profile-form">
+            <div class="d-profile-h">Your profile</div>
+            <div class="d-form-grid">
+              <div class="d-field"><div class="d-lbl">Age</div><div class="d-input"></div></div>
+              <div class="d-field"><div class="d-lbl">Gender</div><div class="d-input"><span style="font-size:8.5px;color:var(--text-3)">Select…</span></div></div>
+              <div class="d-field"><div class="d-lbl">Height (cm)</div><div class="d-input"></div></div>
+              <div class="d-field"><div class="d-lbl">Current weight (kg)</div><div class="d-input"></div></div>
+              <div class="d-field"><div class="d-lbl">Target weight (kg)</div><div class="d-input"></div></div>
+              <div class="d-field d-field-full"><div class="d-lbl">Activity level</div><div class="d-input"><span style="font-size:8.5px;color:var(--text-3)">Select activity level…</span></div></div>
             </div>
-            <div class="p-btn disabled">Verify code</div>
-            <div style="text-align:center;margin-top:10px;">
-              <div style="font-size:6.5px;color:var(--text-3);margin-bottom:3px;">Didn't receive it?</div>
-              <div style="font-size:7px;color:var(--green);font-weight:600;">Resend code <span style="color:var(--text-3);font-weight:400;">(52s)</span></div>
-            </div>
-            <div style="text-align:center;margin-top:6px;font-size:6.5px;color:var(--text-3);">Wrong email? <span style="color:var(--green)">Change it</span></div>
-            <div class="step-dots"><div class="s-dot"></div><div class="s-dot active"></div><div class="s-dot"></div></div>
-            <div style="font-size:6px;color:var(--text-3);text-align:center;margin-top:3px;">Step 2 of 3</div>
+            <div class="d-save-btn">Save &amp; continue →</div>
+          </div>
+          <div class="d-profile-preview">
+            <div class="d-preview-title">Auto-calculated goals</div>
+            <div class="d-preview-val">1,580</div><div class="d-preview-sub">kcal / day target</div>
+            <div style="width:100%;height:1px;background:var(--green-border);margin:8px 0;"></div>
+            <div class="d-preview-val">2,100</div><div class="d-preview-sub">ml water / day</div>
+            <div style="width:100%;height:1px;background:var(--green-border);margin:8px 0;"></div>
+            <div style="font-size:7.5px;color:var(--green-deep);line-height:1.5;">Based on Mifflin-St Jeor BMR × activity multiplier − 500 kcal deficit.</div>
           </div>
         </div>
-        <div class="screen-note">Auto-advances focus to next box. Paste fills all 6 at once. Button enabled only when all 6 filled.</div>
       </div>
+      <div class="mockup-note">2-column form + sticky goals preview panel. No sidebar until Home.</div>
+    </div>
+  </div>
+  <div class="spec-card">
+    <h3>Activity Level Multipliers</h3>
+    <table><thead><tr><th>Level</th><th>Description</th><th>Multiplier</th></tr></thead><tbody>
+      <tr><td>Sedentary</td><td>Little or no exercise</td><td><code>1.2</code></td></tr>
+      <tr><td>Light</td><td>Exercise 1–3 days/week</td><td><code>1.375</code></td></tr>
+      <tr><td>Moderate</td><td>Exercise 3–5 days/week</td><td><code>1.55</code></td></tr>
+      <tr><td>Active</td><td>Hard exercise 6–7 days/week</td><td><code>1.725</code></td></tr>
+      <tr><td>Very active</td><td>Physical job or twice-daily training</td><td><code>1.9</code></td></tr>
+    </tbody></table>
+  </div>
+</section>
 
-      <div class="arrow">→</div>
-
-      <!-- Account Ready -->
-      <div class="screen-col">
-        <div class="screen-label">③ Account Ready</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Account Ready</div>
-          <div class="phone-body">
-            <div class="p-success">
-              <div class="p-success-icon">✅</div>
-              <div class="p-success-title">You're all set!</div>
-              <div class="p-success-sub">Account verified. Let's set up your profile to personalise your experience.</div>
-              <div class="p-next-card">
-                <div class="p-next-title">What happens next</div>
-                <div class="p-next-row"><div class="p-next-num">1</div><div class="p-next-txt">Enter your height, weight & goals</div></div>
-                <div class="p-next-row"><div class="p-next-num">2</div><div class="p-next-txt">We calculate your calorie & water targets</div></div>
-                <div class="p-next-row" style="margin-bottom:0"><div class="p-next-num">3</div><div class="p-next-txt">Start tracking from your dashboard</div></div>
-              </div>
-              <div class="p-btn" style="margin-top:6px">Set up my profile →</div>
-              <div style="font-size:6.5px;color:var(--text-3);margin-top:6px;">Skip for now</div>
+<!-- ════════════════ 5. HOME ════════════════ -->
+<section class="spec-section" id="home">
+  <div class="section-header"><div class="section-num">5</div><div class="section-title">Home Dashboard</div></div>
+  <div class="mockup-row">
+    <!-- MOBILE -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Home</div>
+        <div class="phone-body">
+          <div class="hero-card">
+            <div class="hero-week">WEIGHT PLAN · WEEK 3</div>
+            <div class="hero-stats">
+              <div class="hero-num"><div class="hero-n">63.4</div><div class="hero-l">Start</div></div>
+              <div class="hero-div"></div>
+              <div class="hero-num"><div class="hero-n">↓1.1</div><div class="hero-l">Lost kg</div></div>
+              <div class="hero-div"></div>
+              <div class="hero-num"><div class="hero-n">55.0</div><div class="hero-l">Goal</div></div>
             </div>
-            <div class="step-dots"><div class="s-dot"></div><div class="s-dot"></div><div class="s-dot active"></div></div>
-            <div style="font-size:6px;color:var(--text-3);text-align:center;margin-top:3px;padding-bottom:4px;">Step 3 of 3</div>
+          </div>
+          <div class="card-grid">
+            <div class="mini-card"><div class="mc-title">🍎 Diet</div><div class="mc-sub">Today</div><div class="mc-val">1,240 <span class="mc-unit">kcal</span></div><div class="mc-bar"><div class="mc-fill" style="width:78%;background:var(--green)"></div></div></div>
+            <div class="mini-card"><div class="mc-title">⚖️ Weight</div><div class="mc-sub">Today</div><div class="mc-val">62.3 <span class="mc-unit">kg</span></div><div class="mc-bar"><div class="mc-fill" style="width:55%;background:var(--green)"></div></div></div>
+            <div class="mini-card"><div class="mc-title">🏃 Exercise</div><div class="mc-sub">Today</div><div class="mc-val">320 <span class="mc-unit">kcal</span></div><div class="mc-bar"><div class="mc-fill" style="width:40%;background:var(--red)"></div></div></div>
+            <div class="mini-card"><div class="mc-title">💧 Water</div><div class="mc-sub">Today</div><div class="mc-val">1,200 <span class="mc-unit">ml</span></div><div class="mc-bar"><div class="mc-fill" style="width:57%;background:var(--blue)"></div></div></div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab on"><span class="tab-icon">⌂</span>Home</div>
+            <div class="tab"><span class="tab-icon">📊</span>Stats</div>
+            <div class="tab"><span class="tab-icon">👤</span>Profile</div>
           </div>
         </div>
-        <div class="screen-note">Preview card explains why profile data is needed. "Skip" goes to Home with an incomplete-profile prompt.</div>
       </div>
-
+      <div class="mockup-note">Bottom nav. Tap any card → detail screen.</div>
     </div>
-
-    <div class="spec-card" style="margin-top:1.5rem;">
-      <h3>Sign Up — Field Validation Rules</h3>
-      <table><thead><tr><th>Field</th><th>Rule</th><th>Error message</th></tr></thead><tbody>
-        <tr><td>Full name</td><td>Required, min 2 characters</td><td>"Name is required"</td></tr>
-        <tr><td>Email</td><td>Valid RFC 5322 format</td><td>"Please enter a valid email address"</td></tr>
-        <tr><td>Password</td><td>Min 8 characters</td><td>"Password must be at least 8 characters"</td></tr>
-        <tr><td>Confirm password</td><td>Matches password field</td><td>"Passwords do not match"</td></tr>
-        <tr><td>Terms checkbox</td><td>Must be checked</td><td>Submit button remains disabled</td></tr>
-      </tbody></table>
-      <h3 style="margin-top:1.2rem;">Password Strength Meter</h3>
-      <table><thead><tr><th>Segments filled</th><th>Color</th><th>Label</th></tr></thead><tbody>
-        <tr><td>1</td><td><code style="background:#fde8e8;color:var(--red)">#E24B4A</code></td><td>Weak</td></tr>
-        <tr><td>2</td><td><code style="background:#fef3e2;color:var(--amber)">#BA7517</code></td><td>Fair</td></tr>
-        <tr><td>3</td><td><code style="background:#fef3e2;color:var(--amber)">#BA7517</code></td><td>Medium</td></tr>
-        <tr><td>4</td><td><code style="background:var(--green-light);color:var(--green)">#1D9E75</code></td><td>Strong</td></tr>
-      </tbody></table>
-    </div>
-  </section>
-
-  <!-- 4. LOGIN -->
-  <section class="spec-section" id="login">
-    <div class="section-header">
-      <div class="section-num">4</div>
-      <div class="section-title">Login Screen</div>
-    </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Login</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Login</div>
-          <div class="phone-body">
-            <div class="p-logo-wrap">
-              <div class="p-logo">🌿</div>
-              <div class="p-app-name">FitTrack</div>
-              <div class="p-app-sub">Welcome back</div>
+    <!-- DESKTOP COLLAPSED -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="state-badge collapsed">◀ Collapsed</div>
+      <div class="desktop">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/dashboard</div></div>
+        <div class="d-body">
+          <div class="d-sidebar" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item active"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
             </div>
-            <div class="p-field"><div class="p-label">Email</div><div class="p-input"><span>Enter email</span></div></div>
-            <div class="p-field"><div class="p-label">Password</div><div class="p-input"><span>••••••••</span><span style="font-size:9px;color:var(--text-3)">👁</span></div></div>
-            <div style="text-align:right;font-size:6.5px;color:var(--green);margin-bottom:2px;">Forgot password?</div>
-            <div class="p-btn">Log in</div>
-            <div class="p-divider"><div class="p-div-line"></div><div class="p-div-txt">or continue with</div><div class="p-div-line"></div></div>
-            <div class="p-social">🇬 Google</div>
-            <div class="p-social"> Apple</div>
-            <div class="p-link">Don't have an account? <span>Sign up</span></div>
           </div>
-        </div>
-        <div class="screen-note">Standard login. Navigates to Home Dashboard on success.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. PROFILE SETUP -->
-  <section class="spec-section" id="profile">
-    <div class="section-header">
-      <div class="section-num">5</div>
-      <div class="section-title">Profile Setup</div>
-    </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Profile Setup</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Profile Setup</div>
-          <div class="phone-body">
-            <div style="font-size:9px;font-weight:600;margin-bottom:7px;color:var(--text)">Your profile</div>
-            <div class="p-set-row"><span class="p-set-key">Age</span><div class="p-set-val"></div></div>
-            <div class="p-set-row"><span class="p-set-key">Gender</span><div class="p-set-val"></div></div>
-            <div class="p-set-row"><span class="p-set-key">Height (cm)</span><div class="p-set-val"></div></div>
-            <div class="p-set-row"><span class="p-set-key">Current weight (kg)</span><div class="p-set-val"></div></div>
-            <div class="p-set-row"><span class="p-set-key">Target weight (kg)</span><div class="p-set-val"></div></div>
-            <div class="p-set-row"><span class="p-set-key">Activity level</span><div class="p-set-val"></div></div>
-            <div class="computed-card">
-              <div class="computed-label">Auto-calculated goals</div>
-              <div class="computed-row">
-                <div class="computed-item"><div class="computed-num">1,580</div><div class="computed-sub">kcal / day</div></div>
-                <div style="width:1px;background:var(--green-border);margin:0 4px;"></div>
-                <div class="computed-item"><div class="computed-num">2,100</div><div class="computed-sub">ml / day</div></div>
-              </div>
+          <div class="d-home-content" style="flex:1;overflow:hidden;">
+            <div style="padding:8px 12px 0;"><div style="font-size:11px;font-weight:600;margin-bottom:7px;">Good morning, Zhang Wei 👋</div></div>
+            <div class="d-hero">
+              <div class="d-hero-item"><div class="d-hero-n">63.4</div><div class="d-hero-l">Start (kg)</div></div>
+              <div class="d-hero-div"></div>
+              <div class="d-hero-item"><div class="d-hero-n">↓1.1</div><div class="d-hero-l">Lost (kg)</div></div>
+              <div class="d-hero-div"></div>
+              <div class="d-hero-item"><div class="d-hero-n">55.0</div><div class="d-hero-l">Goal (kg)</div></div>
+              <div class="d-hero-div"></div>
+              <div class="d-hero-item"><div class="d-hero-n">Week 3</div><div class="d-hero-l">of 78</div></div>
             </div>
-            <div class="p-btn" style="margin-top:8px">Save & continue →</div>
-          </div>
-        </div>
-        <div class="screen-note">Goals preview updates live as fields change. Values saved to user record on tap.</div>
-      </div>
-    </div>
-    <div class="spec-card">
-      <h3>Activity Level Multipliers</h3>
-      <table><thead><tr><th>Level</th><th>Description</th><th>Multiplier</th></tr></thead><tbody>
-        <tr><td>Sedentary</td><td>Little or no exercise</td><td><code>1.2</code></td></tr>
-        <tr><td>Light</td><td>Exercise 1–3 days/week</td><td><code>1.375</code></td></tr>
-        <tr><td>Moderate</td><td>Exercise 3–5 days/week</td><td><code>1.55</code></td></tr>
-        <tr><td>Active</td><td>Hard exercise 6–7 days/week</td><td><code>1.725</code></td></tr>
-        <tr><td>Very active</td><td>Physical job or twice-daily training</td><td><code>1.9</code></td></tr>
-      </tbody></table>
-    </div>
-  </section>
-
-  <!-- 6. HOME -->
-  <section class="spec-section" id="home">
-    <div class="section-header">
-      <div class="section-num">6</div>
-      <div class="section-title">Home Dashboard</div>
-    </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Home Dashboard</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Home</div>
-          <div class="phone-body">
-            <div class="hero-card">
-              <div class="hero-week">WEIGHT PLAN · WEEK 3</div>
-              <div class="hero-stats">
-                <div class="hero-num"><div class="hero-n">63.4</div><div class="hero-l">Start</div></div>
-                <div class="hero-div"></div>
-                <div class="hero-num"><div class="hero-n">↓1.1</div><div class="hero-l">Lost kg</div></div>
-                <div class="hero-div"></div>
-                <div class="hero-num"><div class="hero-n">55.0</div><div class="hero-l">Goal</div></div>
-              </div>
-            </div>
-            <div class="card-grid">
-              <div class="mini-card">
-                <div class="mc-title">🍎 Diet</div>
-                <div class="mc-sub">Today</div>
-                <div class="mc-val">1,240 <span class="mc-unit">kcal</span></div>
-                <div class="mc-bar"><div class="mc-fill" style="width:78%;background:var(--green)"></div></div>
-              </div>
-              <div class="mini-card">
-                <div class="mc-title">⚖️ Weight</div>
-                <div class="mc-sub">Today</div>
-                <div class="mc-val">62.3 <span class="mc-unit">kg</span></div>
-                <div class="mc-bar"><div class="mc-fill" style="width:55%;background:var(--green)"></div></div>
-              </div>
-              <div class="mini-card">
-                <div class="mc-title">🏃 Exercise</div>
-                <div class="mc-sub">Today</div>
-                <div class="mc-val">320 <span class="mc-unit">kcal</span></div>
-                <div class="mc-bar"><div class="mc-fill" style="width:40%;background:var(--red)"></div></div>
-              </div>
-              <div class="mini-card">
-                <div class="mc-title">💧 Water</div>
-                <div class="mc-sub">Today</div>
-                <div class="mc-val">1,200 <span class="mc-unit">ml</span></div>
-                <div class="mc-bar"><div class="mc-fill" style="width:57%;background:var(--blue)"></div></div>
-              </div>
-            </div>
-            <div class="tab-bar">
-              <div class="tab on"><span class="tab-icon">⌂</span>Home</div>
-              <div class="tab"><span class="tab-icon">📊</span>Stats</div>
-              <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+            <div class="d-cards">
+              <div class="d-card"><div class="d-card-title">🍎 Diet</div><div class="d-card-sub">Today</div><div class="d-card-val">1,240 <span class="d-card-unit">kcal</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:78%;background:var(--green)"></div></div></div>
+              <div class="d-card"><div class="d-card-title">⚖️ Weight</div><div class="d-card-sub">Today</div><div class="d-card-val">62.3 <span class="d-card-unit">kg</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:55%;background:var(--green)"></div></div></div>
+              <div class="d-card"><div class="d-card-title">🏃 Exercise</div><div class="d-card-sub">Today</div><div class="d-card-val">320 <span class="d-card-unit">kcal</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:40%;background:var(--red)"></div></div></div>
+              <div class="d-card"><div class="d-card-title">💧 Water</div><div class="d-card-sub">Today</div><div class="d-card-val">1,200 <span class="d-card-unit">ml</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:57%;background:var(--blue)"></div></div></div>
             </div>
           </div>
         </div>
-        <div class="screen-note">Each mini-card has a progress bar. Tapping any card opens that detail screen.</div>
       </div>
+      <div class="mockup-note">Default — 36px icons only. Click ☰ to expand.</div>
     </div>
-    <div class="spec-card">
-      <h3>Card Data Sources</h3>
-      <table><thead><tr><th>Card</th><th>Value source</th><th>Progress bar color</th></tr></thead><tbody>
-        <tr><td>Diet</td><td>Sum of today's food log entries (kcal)</td><td><code style="color:var(--green)">#1D9E75</code> green</td></tr>
-        <tr><td>Weight</td><td>Latest weight log entry for today (kg)</td><td><code style="color:var(--green)">#1D9E75</code> green</td></tr>
-        <tr><td>Exercise</td><td>Sum of today's exercise log entries (kcal burned)</td><td><code style="color:var(--red)">#E24B4A</code> red</td></tr>
-        <tr><td>Water</td><td>Sum of today's water log entries (ml)</td><td><code style="color:var(--blue)">#378ADD</code> blue</td></tr>
-      </tbody></table>
+    <!-- DESKTOP EXPANDED -->
+    <div class="mockup-col">
+      <div class="state-badge expanded">▶ Expanded</div>
+      <div class="desktop">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/dashboard</div></div>
+        <div class="d-body">
+          <div class="d-sidebar open" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item active"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-home-content" style="flex:1;overflow:hidden;">
+            <div style="padding:8px 12px 0;"><div style="font-size:11px;font-weight:600;margin-bottom:7px;">Good morning, Zhang Wei 👋</div></div>
+            <div class="d-hero">
+              <div class="d-hero-item"><div class="d-hero-n">63.4</div><div class="d-hero-l">Start (kg)</div></div>
+              <div class="d-hero-div"></div>
+              <div class="d-hero-item"><div class="d-hero-n">↓1.1</div><div class="d-hero-l">Lost (kg)</div></div>
+              <div class="d-hero-div"></div>
+              <div class="d-hero-item"><div class="d-hero-n">55.0</div><div class="d-hero-l">Goal (kg)</div></div>
+              <div class="d-hero-div"></div>
+              <div class="d-hero-item"><div class="d-hero-n">Week 3</div><div class="d-hero-l">of 78</div></div>
+            </div>
+            <div class="d-cards">
+              <div class="d-card"><div class="d-card-title">🍎 Diet</div><div class="d-card-sub">Today</div><div class="d-card-val">1,240 <span class="d-card-unit">kcal</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:78%;background:var(--green)"></div></div></div>
+              <div class="d-card"><div class="d-card-title">⚖️ Weight</div><div class="d-card-sub">Today</div><div class="d-card-val">62.3 <span class="d-card-unit">kg</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:55%;background:var(--green)"></div></div></div>
+              <div class="d-card"><div class="d-card-title">🏃 Exercise</div><div class="d-card-sub">Today</div><div class="d-card-val">320 <span class="d-card-unit">kcal</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:40%;background:var(--red)"></div></div></div>
+              <div class="d-card"><div class="d-card-title">💧 Water</div><div class="d-card-sub">Today</div><div class="d-card-val">1,200 <span class="d-card-unit">ml</span></div><div class="d-card-bar"><div class="d-card-fill" style="width:57%;background:var(--blue)"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Expanded — 128px, icon + label visible. Click ☰ again to collapse.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- 7. DIET -->
-  <section class="spec-section" id="diet">
-    <div class="section-header">
-      <div class="section-num">7</div>
-      <div class="section-title">Diet Log</div>
+<!-- ════════════════ MACRO: sidebar content reused per screen ════════════════ -->
+
+<!-- ════════════════ 6. DIET ════════════════ -->
+<section class="spec-section" id="diet">
+  <div class="section-header"><div class="section-num">6</div><div class="section-title">Diet Log</div></div>
+  <div class="mockup-row">
+    <!-- MOBILE: State 1 — no search, common foods -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — No Search</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Diet Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Diet record</span></div>
+          <div class="goal-banner">
+            <div class="gb-lbl">TODAY'S CALORIE GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num">1,580</div><div class="gb-sub">Target</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">390</div><div class="gb-sub">Consumed</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">1,190</div><div class="gb-sub">Remaining</div></div>
+            </div>
+          </div>
+          <!-- search bar empty -->
+          <div class="search-bar" style="margin-bottom:5px;">🔍 <span style="color:var(--text-3)">Search food…</span></div>
+          <!-- common foods 2-col chip grid -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Common foods</div>
+          <div class="m-chip-grid">
+            <div class="m-chip">🍚 Rice <span class="m-chip-k">130</span></div>
+            <div class="m-chip">🍗 Chicken <span class="m-chip-k">165</span></div>
+            <div class="m-chip">🥚 Egg <span class="m-chip-k">155</span></div>
+            <div class="m-chip">🥦 Broccoli <span class="m-chip-k">34</span></div>
+            <div class="m-chip">🍌 Banana <span class="m-chip-k">89</span></div>
+            <div class="m-chip">🥛 Milk <span class="m-chip-k">61</span></div>
+          </div>
+          <!-- today's log -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;">Today's log</div>
+          <div class="food-item"><span class="food-name">Oats · 80g</span><span class="food-kcal">312 kcal</span></div>
+          <div class="food-item"><span class="food-name">Apple · 150g</span><span class="food-kcal">78 kcal</span></div>
+          <!-- progress bar -->
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Daily calorie progress</span>
+              <span style="font-size:6px;font-weight:600;color:var(--green);">25%</span>
+            </div>
+            <div style="height:5px;background:var(--green-light);overflow:hidden;">
+              <div style="height:100%;width:25%;background:var(--green);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>390 kcal consumed</span><span>Goal: 1,580 kcal</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · swipe up to see progress bar &amp; Today's log.</div>
     </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Diet Log</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Diet Log ✦ updated</div>
-          <div class="phone-body">
-            <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Diet record</span></div>
-            <div class="goal-banner">
-              <div class="gb-lbl">TODAY'S CALORIE GOAL</div>
-              <div class="gb-row">
-                <div class="gb-item"><div class="gb-num">1,580</div><div class="gb-sub">Target kcal</div></div>
-                <div class="gb-div"></div>
-                <div class="gb-item"><div class="gb-num">390</div><div class="gb-sub">Consumed</div></div>
-                <div class="gb-div"></div>
-                <div class="gb-item"><div class="gb-num">1,190</div><div class="gb-sub">Remaining</div></div>
+
+    <!-- MOBILE: State 2 — active search, dropdown -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — Active Search</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Diet Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Diet record</span></div>
+          <div class="goal-banner">
+            <div class="gb-lbl">TODAY'S CALORIE GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num">1,580</div><div class="gb-sub">Target</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">390</div><div class="gb-sub">Consumed</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">1,190</div><div class="gb-sub">Remaining</div></div>
+            </div>
+          </div>
+          <!-- search bar active -->
+          <div style="position:relative;margin-bottom:0;">
+            <div class="search-bar" style="border-color:var(--green);background:#fff;border-bottom:none;margin-bottom:0;">
+              🔍 <span style="color:var(--text);font-weight:500;font-size:7px;">chick</span><span style="display:inline-block;width:1px;height:9px;background:var(--green);margin-left:1px;vertical-align:middle;"></span>
+            </div>
+            <!-- mobile dropdown -->
+            <div class="m-dropdown">
+              <div class="m-drop-item m-drop-hovered">
+                <div><div class="m-drop-name">Chicken breast</div><div class="m-drop-cat">Poultry · per 100g</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span class="m-drop-kcal">165 kcal</span><span class="m-drop-add">+Add</span></div>
+              </div>
+              <div class="m-drop-item">
+                <div><div class="m-drop-name">Chicken thigh</div><div class="m-drop-cat">Poultry · per 100g</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span class="m-drop-kcal">209 kcal</span><span class="m-drop-add">+Add</span></div>
+              </div>
+              <div class="m-drop-item">
+                <div><div class="m-drop-name">Chicken soup</div><div class="m-drop-cat">Soup · per 100g</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span class="m-drop-kcal">20 kcal</span><span class="m-drop-add">+Add</span></div>
+              </div>
+              <div class="m-drop-footer">3 results · Open Food Facts</div>
+            </div>
+          </div>
+          <!-- today's log -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;">Today's log</div>
+          <div class="food-item"><span class="food-name">Oats · 80g</span><span class="food-kcal">312 kcal</span></div>
+          <div class="food-item"><span class="food-name">Apple · 150g</span><span class="food-kcal">78 kcal</span></div>
+          <div class="total-row"><span class="total-lbl">Total today</span><span class="total-val">390 kcal</span></div>
+          <!-- progress bar -->
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Daily calorie progress</span>
+              <span style="font-size:6px;font-weight:600;color:var(--green);">25%</span>
+            </div>
+            <div style="height:5px;background:var(--green-light);overflow:hidden;">
+              <div style="height:100%;width:25%;background:var(--green);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>390 kcal consumed</span><span>Goal: 1,580 kcal</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · dropdown closes after selecting · progress bar at bottom.</div>
+    </div>
+    <!-- DESKTOP: State 1 — no search, shows common foods -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop — No Search (Common Foods)</div>
+      <div class="state-badge collapsed">◀ Sidebar Collapsed</div>
+      <div class="desktop" style="width:520px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/diet</div></div>
+        <div class="d-body">
+          <div class="d-sidebar" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <!-- full-width content -->
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <!-- goal banner -->
+              <div class="d-goal-banner"><div class="d-gb-lbl">TODAY'S CALORIE GOAL</div><div class="d-gb-row"><div class="d-gb-item"><div class="d-gb-num">1,580</div><div class="d-gb-sub">Target kcal</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">390</div><div class="d-gb-sub">Consumed</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">1,190</div><div class="d-gb-sub">Remaining</div></div></div></div>
+              <!-- search bar (empty) -->
+              <div class="d-search" style="position:relative;">
+                <span style="font-size:10px;color:var(--text-3);">🔍</span>
+                <span style="font-size:8px;color:var(--text-3);">Search food… (e.g. rice, chicken)</span>
+              </div>
+              <!-- common foods card grid -->
+              <div class="d-section-h" style="margin-bottom:6px;">Common foods</div>
+              <div class="d-common-grid">
+                <div class="d-common-card"><span class="d-cc-emoji">🍚</span><span class="d-cc-name">Rice</span><span class="d-cc-kcal">130</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🍗</span><span class="d-cc-name">Chicken</span><span class="d-cc-kcal">165</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🥚</span><span class="d-cc-name">Egg</span><span class="d-cc-kcal">155</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🥦</span><span class="d-cc-name">Broccoli</span><span class="d-cc-kcal">34</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🍌</span><span class="d-cc-name">Banana</span><span class="d-cc-kcal">89</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🥛</span><span class="d-cc-name">Milk</span><span class="d-cc-kcal">61</span></div>
+              </div>
+              <!-- today's log -->
+              <div class="d-section-h" style="margin-top:10px;margin-bottom:4px;">Today's log</div>
+              <div class="d-log-table">
+                <div class="d-log-header">
+                  <span>Food</span><span>Quantity</span><span>Calories</span><span></span>
+                </div>
+                <div class="d-log-row"><span>Oats</span><span>80g</span><span style="color:var(--green);font-weight:500;">312 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row"><span>Apple</span><span>150g</span><span style="color:var(--green);font-weight:500;">78 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-total"><span>Total today</span><span></span><span style="color:var(--green);font-weight:600;">390 kcal</span><span></span></div>
               </div>
             </div>
-            <div class="ring-row">
-              <svg width="42" height="42" viewBox="0 0 42 42">
-                <circle cx="21" cy="21" r="16" fill="none" stroke="#E1F5EE" stroke-width="5"/>
-                <circle cx="21" cy="21" r="16" fill="none" stroke="#1D9E75" stroke-width="5" stroke-dasharray="100.5" stroke-dashoffset="75" stroke-linecap="round" transform="rotate(-90 21 21)"/>
-                <text x="21" y="25" text-anchor="middle" font-size="8" font-weight="600" fill="#0F6E56">25%</text>
-              </svg>
-              <div class="ring-info">
-                <div class="ring-title">Calories today</div>
-                <div class="ring-val">390 <span>/ 1,580 kcal</span></div>
-                <div class="ring-status">75% remaining · on track</div>
+            <!-- progress bar footer -->
+            <div class="d-diet-progress">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title">Daily calorie progress</span><span class="d-prog-pct" style="color:var(--green);">25% · 1,190 kcal remaining · on track ✓</span></div>
+                <div class="d-full-bar"><div class="d-full-fill" style="width:25%;"></div></div>
+                <div class="d-prog-nums"><span>0 kcal</span><span>Goal: 1,580 kcal</span></div>
               </div>
             </div>
-            <div class="search-bar">🔍 Search food…</div>
-            <div class="food-item"><span class="food-name">Rice (白米饭)</span><span class="food-kcal">130 kcal/100g</span><span class="food-add">+ Add</span></div>
-            <div class="food-item"><span class="food-name">Chicken breast</span><span class="food-kcal">165 kcal/100g</span><span class="food-add">+ Add</span></div>
-            <div style="font-size:6.5px;color:var(--text-3);margin:5px 0 2px;">Today's intake</div>
-            <div class="food-item"><span class="food-name">Oats · 80g</span><span class="food-kcal">312 kcal</span></div>
-            <div class="food-item"><span class="food-name">Apple · 150g</span><span class="food-kcal">78 kcal</span></div>
-            <div class="total-row"><span class="total-lbl">Total today</span><span class="total-val">390 kcal</span></div>
           </div>
         </div>
-        <div class="screen-note">Goal banner + ring update live on every food entry added or removed.</div>
       </div>
+      <div class="mockup-note">No search query → shows common food chips. Click any chip to quick-add.</div>
     </div>
-    <div class="spec-card">
-      <h3>Add Food Flow</h3>
-      <ul>
-        <li>User types in search bar → query sent to Open Food Facts API (debounce 400ms)</li>
-        <li>Results display: food name + kcal/100g + "+ Add" button</li>
-        <li>Tapping "+ Add" opens a gram input modal/bottom sheet</li>
-        <li>System calculates: <code>kcal = (kcal_per_100g / 100) × grams</code></li>
-        <li>Entry appended to daily log; goal banner and ring update immediately</li>
-      </ul>
-      <h3 style="margin-top:1.2rem;">Ring Color States</h3>
-      <table><thead><tr><th>Progress</th><th>Color</th><th>Status text</th></tr></thead><tbody>
-        <tr><td>0 – 84%</td><td><code style="color:var(--green)">#1D9E75</code> green</td><td>"On track"</td></tr>
-        <tr><td>85 – 99%</td><td><code style="color:var(--amber)">#BA7517</code> amber</td><td>"Almost at your limit"</td></tr>
-        <tr><td>≥ 100%</td><td><code style="color:var(--red)">#E24B4A</code> red</td><td>"Goal reached!" badge</td></tr>
-      </tbody></table>
-    </div>
-  </section>
 
-  <!-- 8. WEIGHT -->
-  <section class="spec-section" id="weight">
-    <div class="section-header">
-      <div class="section-num">8</div>
-      <div class="section-title">Weight Log</div>
-    </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Weight Log</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Weight Log</div>
-          <div class="phone-body">
-            <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Weight record</span></div>
-            <div class="weight-big">
-              <div class="weight-num">62.3</div>
-              <div class="weight-unit">kg · today</div>
+    <!-- DESKTOP: State 2 — active search, shows dropdown -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop — Active Search (Dropdown)</div>
+      <div class="state-badge expanded">▶ Sidebar Expanded</div>
+      <div class="desktop" style="width:580px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/diet</div></div>
+        <div class="d-body">
+          <div class="d-sidebar open" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
             </div>
-            <div class="prog-bar"><div class="prog-fill" style="width:13%"></div></div>
-            <div class="prog-labels"><span>63.4 start</span><span>55.0 goal</span></div>
-            <div class="w-input-row">
-              <div class="w-input"></div>
-              <div class="w-btn-small">Log weight</div>
-            </div>
-            <div style="font-size:6.5px;color:var(--text-3);margin-bottom:3px;font-weight:600;">History</div>
-            <div class="hist-row"><span class="hist-date">May 17</span><span class="hist-kg">62.3 kg</span><span class="hist-dn">▼ 0.2</span></div>
-            <div class="hist-row"><span class="hist-date">May 16</span><span class="hist-kg">62.5 kg</span><span class="hist-dn">▼ 0.2</span></div>
-            <div class="hist-row"><span class="hist-date">May 15</span><span class="hist-kg">62.7 kg</span><span class="hist-dn">▼ 0.1</span></div>
-            <div class="hist-row"><span class="hist-date">May 14</span><span class="hist-kg">62.8 kg</span><span class="hist-up">▲ 0.1</span></div>
           </div>
-        </div>
-        <div class="screen-note">New entry updates Home hero "Lost" value and the Weight card instantly.</div>
-      </div>
-    </div>
-    <div class="spec-card">
-      <h3>Progress Bar Calculation</h3>
-      <pre>fill % = (start_weight − current_weight) / (start_weight − target_weight) × 100</pre>
-      <h3 style="margin-top:1rem;">On Save — Updates triggered</h3>
-      <ul>
-        <li>Large number at top of Weight Log screen</li>
-        <li>Weight card value on Home Dashboard</li>
-        <li>Hero card "Lost kg" value (recalculated as <code>start − current</code>)</li>
-        <li><code>profile.current_weight</code> field in user record</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 9. EXERCISE -->
-  <section class="spec-section" id="exercise">
-    <div class="section-header">
-      <div class="section-num">9</div>
-      <div class="section-title">Exercise Log</div>
-    </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Exercise Log</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Exercise Log</div>
-          <div class="phone-body">
-            <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Exercise record</span></div>
-            <div class="search-bar">🔍 Search exercise…</div>
-            <div style="font-size:6.5px;color:var(--text-3);margin-bottom:3px;font-weight:600;">Today's workout</div>
-            <div class="ex-card">
-              <div class="ex-top"><span class="ex-name">🏃 Running</span><span class="ex-kcal">280 kcal</span></div>
-              <div class="ex-dur">30 min · outdoor</div>
-            </div>
-            <div class="ex-card">
-              <div class="ex-top"><span class="ex-name">🚴 Cycling</span><span class="ex-kcal">150 kcal</span></div>
-              <div class="ex-dur">20 min · stationary</div>
-            </div>
-            <div class="total-row"><span class="total-lbl">Total burned</span><span class="total-val" style="color:var(--red)">430 kcal</span></div>
-            <div class="p-btn" style="margin-top:6px;font-size:7px;">+ Add exercise</div>
-          </div>
-        </div>
-        <div class="screen-note">User picks activity, inputs duration in minutes. System calculates burned kcal via MET formula.</div>
-      </div>
-    </div>
-    <div class="spec-card">
-      <h3>Calorie Burn Formula</h3>
-      <pre><b>Calories burned</b> = MET × user_weight_kg × (duration_minutes / 60)</pre>
-      <h3 style="margin-top:1rem;">Reference MET Values</h3>
-      <table><thead><tr><th>Activity</th><th>MET</th></tr></thead><tbody>
-        <tr><td>Running (general)</td><td><code>9.8</code></td></tr>
-        <tr><td>Cycling (moderate)</td><td><code>5.8</code></td></tr>
-        <tr><td>Walking (5.6 km/h)</td><td><code>3.5</code></td></tr>
-        <tr><td>Swimming (moderate)</td><td><code>6.0</code></td></tr>
-        <tr><td>Jump rope</td><td><code>11.8</code></td></tr>
-        <tr><td>Yoga</td><td><code>2.5</code></td></tr>
-      </tbody></table>
-      <p class="note">Full reference: Compendium of Physical Activities (Ainsworth et al.)</p>
-    </div>
-  </section>
-
-  <!-- 10. WATER -->
-  <section class="spec-section" id="water">
-    <div class="section-header">
-      <div class="section-num">10</div>
-      <div class="section-title">Water Log</div>
-    </div>
-    <div class="screen-grid">
-      <div class="screen-col">
-        <div class="screen-label">Water Log</div>
-        <div class="phone">
-          <div class="phone-top"><div class="phone-notch"></div></div>
-          <div class="phone-screen-title">Water Log ✦ updated</div>
-          <div class="phone-body">
-            <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Water record</span></div>
-            <div class="water-ring-row">
-              <svg width="46" height="46" viewBox="0 0 46 46">
-                <circle cx="23" cy="23" r="17" fill="none" stroke="#B5D4F4" stroke-width="5"/>
-                <circle cx="23" cy="23" r="17" fill="none" stroke="#378ADD" stroke-width="5" stroke-dasharray="106.8" stroke-dashoffset="58.7" stroke-linecap="round" transform="rotate(-90 23 23)"/>
-                <text x="23" y="27" text-anchor="middle" font-size="8.5" font-weight="600" fill="#185FA5">45%</text>
-              </svg>
-              <div>
-                <div class="water-big">950 <span class="water-unit">ml</span></div>
-                <div style="font-size:6.5px;color:var(--blue-dark)">today's intake</div>
-                <div class="water-goal-txt">Goal: 2,100 ml · 1,150 ml left</div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <div class="d-goal-banner"><div class="d-gb-lbl">TODAY'S CALORIE GOAL</div><div class="d-gb-row"><div class="d-gb-item"><div class="d-gb-num">1,580</div><div class="d-gb-sub">Target kcal</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">390</div><div class="d-gb-sub">Consumed</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">1,190</div><div class="d-gb-sub">Remaining</div></div></div></div>
+              <!-- search bar — active, has text -->
+              <div style="position:relative;margin-bottom:0;">
+                <div class="d-search" style="border-color:var(--green);background:#fff;border-bottom:none;">
+                  <span style="font-size:10px;color:var(--green);">🔍</span>
+                  <span style="font-size:8px;color:var(--text);font-weight:500;">chick</span>
+                  <span style="display:inline-block;width:1px;height:10px;background:var(--green);margin-left:1px;animation:blink 1s step-end infinite;"></span>
+                </div>
+                <!-- dropdown -->
+                <div class="d-dropdown">
+                  <div class="d-drop-item hovered">
+                    <div class="d-drop-left"><span class="d-drop-name">Chicken breast</span><span class="d-drop-cat">Poultry · per 100g</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">165 kcal</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-item">
+                    <div class="d-drop-left"><span class="d-drop-name">Chicken thigh (skinless)</span><span class="d-drop-cat">Poultry · per 100g</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">209 kcal</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-item">
+                    <div class="d-drop-left"><span class="d-drop-name">Chicken soup</span><span class="d-drop-cat">Soup · per 100g</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">20 kcal</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-item">
+                    <div class="d-drop-left"><span class="d-drop-name">Chicken fried rice</span><span class="d-drop-cat">Rice dish · per 100g</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">163 kcal</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-footer">4 results · powered by Open Food Facts</div>
+                </div>
+              </div>
+              <!-- today's log -->
+              <div class="d-section-h" style="margin-top:14px;margin-bottom:4px;">Today's log</div>
+              <div class="d-log-table">
+                <div class="d-log-header"><span>Food</span><span>Quantity</span><span>Calories</span><span></span></div>
+                <div class="d-log-row"><span>Oats</span><span>80g</span><span style="color:var(--green);font-weight:500;">312 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row"><span>Apple</span><span>150g</span><span style="color:var(--green);font-weight:500;">78 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-total"><span>Total today</span><span></span><span style="color:var(--green);font-weight:600;">390 kcal</span><span></span></div>
               </div>
             </div>
-            <div class="water-bar"><div class="water-fill" style="width:45%"></div></div>
-            <div style="display:flex;justify-content:space-between;font-size:5.5px;color:var(--blue-dark);margin-bottom:6px;"><span>0</span><span>45% · 950 ml</span><span>2,100 ml</span></div>
-            <div class="water-btns">
-              <div class="water-btn">+ 100 ml</div>
-              <div class="water-btn">+ 200 ml</div>
-              <div class="water-btn">+ 250 ml</div>
-              <div class="water-btn">+ 500 ml</div>
+            <div class="d-diet-progress">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title">Daily calorie progress</span><span class="d-prog-pct" style="color:var(--green);">25% · 1,190 kcal remaining · on track ✓</span></div>
+                <div class="d-full-bar"><div class="d-full-fill" style="width:25%;"></div></div>
+                <div class="d-prog-nums"><span>0 kcal</span><span>Goal: 1,580 kcal</span></div>
+              </div>
             </div>
-            <div class="p-btn blue" style="margin-top:5px;font-size:7px;">Custom amount</div>
-            <div class="water-tip">Tip: drink a glass every 2 hours to hit your goal</div>
           </div>
         </div>
-        <div class="screen-note">Ring + bar update immediately on each quick-add tap. Goal pulled from profile calculation.</div>
       </div>
+      <div class="mockup-note">Typing triggers dropdown below search bar. Hovering a result highlights it. "+ Add" opens gram input modal.</div>
     </div>
-    <div class="spec-card">
-      <h3>Quick-Add Buttons</h3>
-      <table><thead><tr><th>Button</th><th>Amount</th></tr></thead><tbody>
-        <tr><td>+ 100 ml</td><td>Small glass</td></tr>
-        <tr><td>+ 200 ml</td><td>Small bottle</td></tr>
-        <tr><td>+ 250 ml</td><td>Standard glass</td></tr>
-        <tr><td>+ 500 ml</td><td>Large bottle</td></tr>
-      </tbody></table>
-      <p class="note" style="margin-top:0.75rem;">Ring color states follow same 3-threshold rule as Diet (blue → amber → red / green at 100%).</p>
-    </div>
-  </section>
+  </div>
+  <div class="spec-card">
+    <h3>Add Food Flow</h3>
+    <ul>
+      <li>Search bar queries Open Food Facts API (debounce 400ms)</li>
+      <li>Result shows food name + kcal/100g + "+ Add"</li>
+      <li>Tap Add → gram input modal → <code>kcal = (kcal_per_100g / 100) × grams</code></li>
+      <li>Entry appended; banner and ring update immediately</li>
+    </ul>
+  </div>
+</section>
 
-  <!-- 11. FORMULAS -->
-  <section class="spec-section" id="formulas">
-    <div class="section-header">
-      <div class="section-num">11</div>
-      <div class="section-title">Goal Calculation Formulas</div>
+<!-- ════════════════ 7. WEIGHT ════════════════ -->
+<section class="spec-section" id="weight">
+  <div class="section-header"><div class="section-num">7</div><div class="section-title">Weight Log</div></div>
+  <div class="mockup-row">
+
+    <!-- MOBILE: log input state -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — Log Weight</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Weight Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Weight record</span></div>
+          <!-- goal banner -->
+          <div class="goal-banner">
+            <div class="gb-lbl">WEIGHT GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num">63.4</div><div class="gb-sub">Start kg</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">62.3</div><div class="gb-sub">Current kg</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">55.0</div><div class="gb-sub">Goal kg</div></div>
+            </div>
+          </div>
+          <!-- log input -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;">Log today's weight</div>
+          <div class="w-input-row"><div class="w-input"></div><div class="w-btn-small">Log weight</div></div>
+          <!-- history log -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;">History</div>
+          <div class="d-log-header" style="grid-template-columns:1fr 80px 50px;font-size:6px;padding:2px 0;"><span>Date</span><span>Weight</span><span>Change</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 50px;font-size:7px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border);"><span style="color:var(--text-3)">May 17</span><span>62.3 kg</span><span style="color:var(--green)">▼ 0.2</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 50px;font-size:7px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border);"><span style="color:var(--text-3)">May 16</span><span>62.5 kg</span><span style="color:var(--green)">▼ 0.2</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 50px;font-size:7px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border);"><span style="color:var(--text-3)">May 15</span><span>62.7 kg</span><span style="color:var(--green)">▼ 0.1</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 50px;font-size:7px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border);"><span style="color:var(--text-3)">May 14</span><span>62.8 kg</span><span style="color:var(--red)">▲ 0.1</span></div>
+          <!-- progress bar -->
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Progress to goal</span>
+              <span style="font-size:6px;font-weight:600;color:var(--green);">13% · 7.3 kg to go</span>
+            </div>
+            <div style="height:5px;background:var(--green-light);overflow:hidden;">
+              <div style="height:100%;width:13%;background:var(--green);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>63.4 kg start</span><span>55.0 kg goal</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · banner shows start / current / goal · progress bar at bottom.</div>
     </div>
-    <div class="spec-card">
-      <h3>BMR — Mifflin-St Jeor Equation</h3>
-      <pre><b>Female:</b> BMR = (10 × weight_kg) + (6.25 × height_cm) − (5 × age) − 161
+
+    <!-- DESKTOP COLLAPSED -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="state-badge collapsed">◀ Collapsed</div>
+      <div class="desktop" style="width:520px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/weight</div></div>
+        <div class="d-body">
+          <div class="d-sidebar" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <!-- goal banner -->
+              <div class="d-goal-banner"><div class="d-gb-lbl">WEIGHT GOAL</div><div class="d-gb-row"><div class="d-gb-item"><div class="d-gb-num">63.4</div><div class="d-gb-sub">Start kg</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">62.3</div><div class="d-gb-sub">Current kg</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">↓1.1</div><div class="d-gb-sub">Lost kg</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">55.0</div><div class="d-gb-sub">Goal kg</div></div></div></div>
+              <!-- log input -->
+              <div class="d-section-h" style="margin-bottom:5px;">Log today's weight</div>
+              <div style="display:flex;gap:8px;margin-bottom:10px;">
+                <div class="d-input" style="width:140px;flex-shrink:0;">62.3 kg</div>
+                <div class="d-btn" style="width:100px;margin-top:0;height:20px;font-size:8px;">Log weight</div>
+              </div>
+              <!-- history table -->
+              <div class="d-section-h" style="margin-bottom:4px;">History</div>
+              <div class="d-log-table">
+                <div class="d-log-header" style="grid-template-columns:1fr 100px 100px 60px;"><span>Date</span><span>Weight</span><span>Change</span><span>Action</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 17, 2026</span><span>62.3 kg</span><span style="color:var(--green)">▼ 0.2 kg</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 16, 2026</span><span>62.5 kg</span><span style="color:var(--green)">▼ 0.2 kg</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 15, 2026</span><span>62.7 kg</span><span style="color:var(--green)">▼ 0.1 kg</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 14, 2026</span><span>62.8 kg</span><span style="color:var(--red)">▲ 0.1 kg</span><span class="d-log-del">✕</span></div>
+              </div>
+            </div>
+            <!-- progress bar footer -->
+            <div class="d-diet-progress">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title">Progress to goal</span><span class="d-prog-pct" style="color:var(--green);">13% · 1.1 kg lost · 7.3 kg to go</span></div>
+                <div class="d-full-bar"><div class="d-full-fill" style="width:13%;"></div></div>
+                <div class="d-prog-nums"><span>63.4 kg start</span><span>55.0 kg goal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Full-width layout. Progress bar at bottom. History table with delete.</div>
+    </div>
+
+    <!-- DESKTOP EXPANDED -->
+    <div class="mockup-col">
+      <div class="state-badge expanded">▶ Expanded</div>
+      <div class="desktop" style="width:580px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/weight</div></div>
+        <div class="d-body">
+          <div class="d-sidebar open" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <div class="d-goal-banner"><div class="d-gb-lbl">WEIGHT GOAL</div><div class="d-gb-row"><div class="d-gb-item"><div class="d-gb-num">63.4</div><div class="d-gb-sub">Start kg</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">62.3</div><div class="d-gb-sub">Current kg</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">↓1.1</div><div class="d-gb-sub">Lost kg</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">55.0</div><div class="d-gb-sub">Goal kg</div></div></div></div>
+              <div class="d-section-h" style="margin-bottom:5px;">Log today's weight</div>
+              <div style="display:flex;gap:8px;margin-bottom:10px;">
+                <div class="d-input" style="width:140px;flex-shrink:0;">62.3 kg</div>
+                <div class="d-btn" style="width:100px;margin-top:0;height:20px;font-size:8px;">Log weight</div>
+              </div>
+              <div class="d-section-h" style="margin-bottom:4px;">History</div>
+              <div class="d-log-table">
+                <div class="d-log-header" style="grid-template-columns:1fr 100px 100px 60px;"><span>Date</span><span>Weight</span><span>Change</span><span>Action</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 17, 2026</span><span>62.3 kg</span><span style="color:var(--green)">▼ 0.2 kg</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 16, 2026</span><span>62.5 kg</span><span style="color:var(--green)">▼ 0.2 kg</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 15, 2026</span><span>62.7 kg</span><span style="color:var(--green)">▼ 0.1 kg</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 100px 60px;"><span>May 14, 2026</span><span>62.8 kg</span><span style="color:var(--red)">▲ 0.1 kg</span><span class="d-log-del">✕</span></div>
+              </div>
+            </div>
+            <div class="d-diet-progress">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title">Progress to goal</span><span class="d-prog-pct" style="color:var(--green);">13% · 1.1 kg lost · 7.3 kg to go</span></div>
+                <div class="d-full-bar"><div class="d-full-fill" style="width:13%;"></div></div>
+                <div class="d-prog-nums"><span>63.4 kg start</span><span>55.0 kg goal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Labels visible. Same full-width layout.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 8. EXERCISE ════════════════ -->
+<section class="spec-section" id="exercise">
+  <div class="section-header"><div class="section-num">8</div><div class="section-title">Exercise Log</div></div>
+  <div class="mockup-row">
+
+    <!-- MOBILE: no search, common exercises -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — No Search</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Exercise Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Exercise record</span></div>
+          <div class="goal-banner">
+            <div class="gb-lbl">TODAY'S BURN GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num">860</div><div class="gb-sub">Target kcal</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">430</div><div class="gb-sub">Burned</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">430</div><div class="gb-sub">Remaining</div></div>
+            </div>
+          </div>
+          <div class="search-bar" style="margin-bottom:5px;">🔍 <span style="color:var(--text-3)">Search exercise…</span></div>
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Common exercises</div>
+          <div class="m-chip-grid">
+            <div class="m-chip">🏃 Running <span class="m-chip-k">MET 9.8</span></div>
+            <div class="m-chip">🚴 Cycling <span class="m-chip-k">MET 5.8</span></div>
+            <div class="m-chip">🏊 Swimming <span class="m-chip-k">MET 6.0</span></div>
+            <div class="m-chip">🚶 Walking <span class="m-chip-k">MET 3.5</span></div>
+            <div class="m-chip">🧘 Yoga <span class="m-chip-k">MET 2.5</span></div>
+            <div class="m-chip">🪂 Jump rope <span class="m-chip-k">MET 11.8</span></div>
+          </div>
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;">Today's workout</div>
+          <div class="food-item"><span class="food-name">🏃 Running · 30 min</span><span class="food-kcal" style="color:var(--red)">280 kcal</span></div>
+          <div class="food-item"><span class="food-name">🚴 Cycling · 20 min</span><span class="food-kcal" style="color:var(--red)">150 kcal</span></div>
+          <div class="total-row"><span class="total-lbl">Total burned</span><span class="total-val" style="color:var(--red)">430 kcal</span></div>
+          <!-- progress bar -->
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Daily burn progress</span>
+              <span style="font-size:6px;font-weight:600;color:var(--red);">50% · 430 kcal remaining</span>
+            </div>
+            <div style="height:5px;background:#fde8e8;overflow:hidden;">
+              <div style="height:100%;width:50%;background:var(--red);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>430 kcal burned</span><span>Goal: 860 kcal</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · common exercise chips · progress bar at bottom.</div>
+    </div>
+
+    <!-- MOBILE: active search, dropdown -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — Active Search</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Exercise Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Exercise record</span></div>
+          <div class="goal-banner">
+            <div class="gb-lbl">TODAY'S BURN GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num">860</div><div class="gb-sub">Target kcal</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">430</div><div class="gb-sub">Burned</div></div>
+              <div class="gb-div"></div>
+              <div class="gb-item"><div class="gb-num">430</div><div class="gb-sub">Remaining</div></div>
+            </div>
+          </div>
+          <div style="position:relative;margin-bottom:0;">
+            <div class="search-bar" style="border-color:var(--green);background:#fff;border-bottom:none;margin-bottom:0;">
+              🔍 <span style="color:var(--text);font-weight:500;font-size:7px;">run</span><span style="display:inline-block;width:1px;height:9px;background:var(--green);margin-left:1px;vertical-align:middle;"></span>
+            </div>
+            <div class="m-dropdown">
+              <div class="m-drop-item m-drop-hovered">
+                <div><div class="m-drop-name">Running (outdoor)</div><div class="m-drop-cat">Cardio · MET 9.8</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span class="m-drop-kcal">~280 kcal</span><span class="m-drop-add">+Add</span></div>
+              </div>
+              <div class="m-drop-item">
+                <div><div class="m-drop-name">Running (treadmill)</div><div class="m-drop-cat">Cardio · MET 8.0</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span class="m-drop-kcal">~229 kcal</span><span class="m-drop-add">+Add</span></div>
+              </div>
+              <div class="m-drop-item">
+                <div><div class="m-drop-name">Running (sprint)</div><div class="m-drop-cat">Cardio · MET 19.0</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span class="m-drop-kcal">~544 kcal</span><span class="m-drop-add">+Add</span></div>
+              </div>
+              <div class="m-drop-footer">3 results · ~kcal per 30 min</div>
+            </div>
+          </div>
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:6px 0 3px;">Today's workout</div>
+          <div class="food-item"><span class="food-name">🏃 Running · 30 min</span><span class="food-kcal" style="color:var(--red)">280 kcal</span></div>
+          <div class="food-item"><span class="food-name">🚴 Cycling · 20 min</span><span class="food-kcal" style="color:var(--red)">150 kcal</span></div>
+          <div class="total-row"><span class="total-lbl">Total burned</span><span class="total-val" style="color:var(--red)">430 kcal</span></div>
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Daily burn progress</span>
+              <span style="font-size:6px;font-weight:600;color:var(--red);">50% · 430 kcal remaining</span>
+            </div>
+            <div style="height:5px;background:#fde8e8;overflow:hidden;">
+              <div style="height:100%;width:50%;background:var(--red);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>430 kcal burned</span><span>Goal: 860 kcal</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · dropdown shows MET + estimated kcal · "+Add" prompts duration input.</div>
+    </div>
+
+    <!-- DESKTOP COLLAPSED -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="state-badge collapsed">◀ Collapsed</div>
+      <div class="desktop" style="width:520px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/exercise</div></div>
+        <div class="d-body">
+          <div class="d-sidebar" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <div class="d-goal-banner"><div class="d-gb-lbl">TODAY'S BURN GOAL</div><div class="d-gb-row"><div class="d-gb-item"><div class="d-gb-num">860</div><div class="d-gb-sub">Target kcal</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">430</div><div class="d-gb-sub">Burned</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">430</div><div class="d-gb-sub">Remaining</div></div></div></div>
+              <div class="d-search" style="position:relative;">
+                <span style="font-size:10px;color:var(--text-3);">🔍</span>
+                <span style="font-size:8px;color:var(--text-3);">Search exercise… (e.g. running, yoga)</span>
+              </div>
+              <div class="d-section-h" style="margin-bottom:6px;">Common exercises</div>
+              <div class="d-common-grid">
+                <div class="d-common-card"><span class="d-cc-emoji">🏃</span><span class="d-cc-name">Running</span><span class="d-cc-kcal">MET 9.8</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🚴</span><span class="d-cc-name">Cycling</span><span class="d-cc-kcal">MET 5.8</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🏊</span><span class="d-cc-name">Swimming</span><span class="d-cc-kcal">MET 6.0</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🚶</span><span class="d-cc-name">Walking</span><span class="d-cc-kcal">MET 3.5</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🧘</span><span class="d-cc-name">Yoga</span><span class="d-cc-kcal">MET 2.5</span></div>
+                <div class="d-common-card"><span class="d-cc-emoji">🪂</span><span class="d-cc-name">Jump rope</span><span class="d-cc-kcal">MET 11.8</span></div>
+              </div>
+              <div class="d-section-h" style="margin-top:10px;margin-bottom:4px;">Today's workout</div>
+              <div class="d-log-table">
+                <div class="d-log-header" style="grid-template-columns:1fr 80px 100px 24px;"><span>Exercise</span><span>Duration</span><span>Calories burned</span><span></span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 80px 100px 24px;"><span>🏃 Running</span><span>30 min</span><span style="color:var(--red);font-weight:500;">280 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 80px 100px 24px;"><span>🚴 Cycling</span><span>20 min</span><span style="color:var(--red);font-weight:500;">150 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-total" style="grid-template-columns:1fr 80px 100px 24px;"><span>Total burned</span><span>50 min</span><span style="color:var(--red);font-weight:600;">430 kcal</span><span></span></div>
+              </div>
+            </div>
+            <div class="d-diet-progress">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title">Daily burn progress</span><span class="d-prog-pct" style="color:var(--red);">50% · 430 kcal remaining · keep going 🔥</span></div>
+                <div class="d-full-bar" style="background:#fde8e8;"><div class="d-full-fill" style="width:50%;background:var(--red);"></div></div>
+                <div class="d-prog-nums"><span>0 kcal</span><span>Goal: 860 kcal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Full-width layout. Common exercise cards. Log table. Progress bar at bottom.</div>
+    </div>
+
+    <!-- DESKTOP EXPANDED -->
+    <div class="mockup-col">
+      <div class="state-badge expanded">▶ Expanded</div>
+      <div class="desktop" style="width:580px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/exercise</div></div>
+        <div class="d-body">
+          <div class="d-sidebar open" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <div class="d-goal-banner"><div class="d-gb-lbl">TODAY'S BURN GOAL</div><div class="d-gb-row"><div class="d-gb-item"><div class="d-gb-num">860</div><div class="d-gb-sub">Target kcal</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">430</div><div class="d-gb-sub">Burned</div></div><div class="d-gb-div"></div><div class="d-gb-item"><div class="d-gb-num">430</div><div class="d-gb-sub">Remaining</div></div></div></div>
+              <!-- active search state -->
+              <div style="position:relative;margin-bottom:0;">
+                <div class="d-search" style="border-color:var(--green);background:#fff;border-bottom:none;">
+                  <span style="font-size:10px;color:var(--green);">🔍</span>
+                  <span style="font-size:8px;color:var(--text);font-weight:500;">run</span>
+                  <span style="display:inline-block;width:1px;height:10px;background:var(--green);margin-left:1px;"></span>
+                </div>
+                <div class="d-dropdown">
+                  <div class="d-drop-item hovered">
+                    <div class="d-drop-left"><span class="d-drop-name">Running (outdoor)</span><span class="d-drop-cat">Cardio · MET 9.8</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">~280 kcal/30min</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-item">
+                    <div class="d-drop-left"><span class="d-drop-name">Running (treadmill)</span><span class="d-drop-cat">Cardio · MET 8.0</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">~229 kcal/30min</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-item">
+                    <div class="d-drop-left"><span class="d-drop-name">Running (sprint)</span><span class="d-drop-cat">Cardio · MET 19.0</span></div>
+                    <div class="d-drop-right"><span class="d-drop-kcal">~544 kcal/30min</span><span class="d-drop-add">+ Add</span></div>
+                  </div>
+                  <div class="d-drop-footer">3 results · Compendium of Physical Activities</div>
+                </div>
+              </div>
+              <div class="d-section-h" style="margin-top:14px;margin-bottom:4px;">Today's workout</div>
+              <div class="d-log-table">
+                <div class="d-log-header" style="grid-template-columns:1fr 80px 100px 24px;"><span>Exercise</span><span>Duration</span><span>Calories burned</span><span></span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 80px 100px 24px;"><span>🏃 Running</span><span>30 min</span><span style="color:var(--red);font-weight:500;">280 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 80px 100px 24px;"><span>🚴 Cycling</span><span>20 min</span><span style="color:var(--red);font-weight:500;">150 kcal</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-total" style="grid-template-columns:1fr 80px 100px 24px;"><span>Total burned</span><span>50 min</span><span style="color:var(--red);font-weight:600;">430 kcal</span><span></span></div>
+              </div>
+            </div>
+            <div class="d-diet-progress">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title">Daily burn progress</span><span class="d-prog-pct" style="color:var(--red);">50% · 430 kcal remaining · keep going 🔥</span></div>
+                <div class="d-full-bar" style="background:#fde8e8;"><div class="d-full-fill" style="width:50%;background:var(--red);"></div></div>
+                <div class="d-prog-nums"><span>0 kcal</span><span>Goal: 860 kcal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Expanded sidebar. Active search shows dropdown with MET + estimated kcal.</div>
+    </div>
+  </div>
+  <div class="spec-card">
+    <h3>Calorie Burn Formula</h3>
+    <pre><b>Calories burned</b> = MET × user_weight_kg × (duration_minutes / 60)</pre>
+    <table style="margin-top:.75rem"><thead><tr><th>Activity</th><th>MET</th></tr></thead><tbody>
+      <tr><td>Running (general)</td><td><code>9.8</code></td></tr>
+      <tr><td>Cycling (moderate)</td><td><code>5.8</code></td></tr>
+      <tr><td>Walking (5.6 km/h)</td><td><code>3.5</code></td></tr>
+      <tr><td>Swimming (moderate)</td><td><code>6.0</code></td></tr>
+      <tr><td>Jump rope</td><td><code>11.8</code></td></tr>
+      <tr><td>Yoga</td><td><code>2.5</code></td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ════════════════ 9. WATER ════════════════ -->
+<section class="spec-section" id="water">
+  <div class="section-header"><div class="section-num">9</div><div class="section-title">Water Log</div></div>
+  <div class="mockup-row">
+
+    <!-- MOBILE: default state, quick-add buttons -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — Quick Add</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Water Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Water record</span></div>
+          <!-- goal banner -->
+          <div class="goal-banner" style="background:#E6F1FB;border:0.5px solid #85B7EB;">
+            <div class="gb-lbl" style="color:#0C447C;">TODAY'S WATER GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num" style="color:var(--blue-dark);">2,100</div><div class="gb-sub" style="color:var(--blue-dark);">Target ml</div></div>
+              <div class="gb-div" style="background:#85B7EB;"></div>
+              <div class="gb-item"><div class="gb-num" style="color:var(--blue-dark);">950</div><div class="gb-sub" style="color:var(--blue-dark);">Consumed</div></div>
+              <div class="gb-div" style="background:#85B7EB;"></div>
+              <div class="gb-item"><div class="gb-num" style="color:var(--blue-dark);">1,150</div><div class="gb-sub" style="color:var(--blue-dark);">Remaining</div></div>
+            </div>
+          </div>
+          <!-- quick-add card grid -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:5px 0 4px;">Quick add</div>
+          <div class="m-chip-grid">
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 100 ml <span class="m-chip-k" style="color:var(--blue-dark);">small glass</span></div>
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 200 ml <span class="m-chip-k" style="color:var(--blue-dark);">bottle</span></div>
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 250 ml <span class="m-chip-k" style="color:var(--blue-dark);">glass</span></div>
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 500 ml <span class="m-chip-k" style="color:var(--blue-dark);">large bottle</span></div>
+          </div>
+          <div class="p-btn blue" style="margin:5px 0;font-size:7px;">+ Custom amount</div>
+          <!-- today's log -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:5px 0 3px;">Today's log</div>
+          <div class="food-item"><span class="food-name">9:00 AM</span><span class="food-kcal" style="color:var(--blue);">250 ml</span></div>
+          <div class="food-item"><span class="food-name">11:30 AM</span><span class="food-kcal" style="color:var(--blue);">500 ml</span></div>
+          <div class="food-item"><span class="food-name">2:00 PM</span><span class="food-kcal" style="color:var(--blue);">200 ml</span></div>
+          <div class="total-row"><span class="total-lbl">Total today</span><span class="total-val" style="color:var(--blue);">950 ml</span></div>
+          <!-- progress bar -->
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Daily water progress</span>
+              <span style="font-size:6px;font-weight:600;color:var(--blue);">45% · 1,150 ml remaining</span>
+            </div>
+            <div style="height:5px;background:#B5D4F4;overflow:hidden;">
+              <div style="height:100%;width:45%;background:var(--blue);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>950 ml consumed</span><span>Goal: 2,100 ml</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · 4 quick-add chips · today's log · progress bar at bottom.</div>
+    </div>
+
+    <!-- MOBILE: custom amount input -->
+    <div class="mockup-col">
+      <div class="mockup-tag">📱 Mobile — Custom Amount</div>
+      <div class="phone">
+        <div class="phone-top"><div class="phone-notch"></div></div>
+        <div class="phone-bar">Water Log</div>
+        <div class="phone-body">
+          <div class="p-back"><span class="p-back-icon">←</span><span class="p-screen-h">Water record</span></div>
+          <div class="goal-banner" style="background:#E6F1FB;border:0.5px solid #85B7EB;">
+            <div class="gb-lbl" style="color:#0C447C;">TODAY'S WATER GOAL</div>
+            <div class="gb-row">
+              <div class="gb-item"><div class="gb-num" style="color:var(--blue-dark);">2,100</div><div class="gb-sub" style="color:var(--blue-dark);">Target ml</div></div>
+              <div class="gb-div" style="background:#85B7EB;"></div>
+              <div class="gb-item"><div class="gb-num" style="color:var(--blue-dark);">950</div><div class="gb-sub" style="color:var(--blue-dark);">Consumed</div></div>
+              <div class="gb-div" style="background:#85B7EB;"></div>
+              <div class="gb-item"><div class="gb-num" style="color:var(--blue-dark);">1,150</div><div class="gb-sub" style="color:var(--blue-dark);">Remaining</div></div>
+            </div>
+          </div>
+          <!-- custom input active -->
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:5px 0 4px;">Custom amount</div>
+          <div style="display:flex;gap:4px;margin-bottom:5px;">
+            <div style="flex:1;height:16px;background:#E6F1FB;border:1px solid var(--blue);display:flex;align-items:center;padding:0 6px;font-size:7.5px;color:var(--blue-dark);font-weight:500;">
+              350 ml<span style="display:inline-block;width:1px;height:9px;background:var(--blue);margin-left:2px;vertical-align:middle;"></span>
+            </div>
+            <div class="p-btn blue" style="margin:0;width:60px;font-size:7px;height:16px;">Add</div>
+          </div>
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:5px 0 3px;">Quick add</div>
+          <div class="m-chip-grid">
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 100 ml</div>
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 200 ml</div>
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 250 ml</div>
+            <div class="m-chip" style="border-color:#85B7EB;background:#E6F1FB;color:var(--blue-dark);">💧 500 ml</div>
+          </div>
+          <div style="font-size:6px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin:5px 0 3px;">Today's log</div>
+          <div class="food-item"><span class="food-name">9:00 AM</span><span class="food-kcal" style="color:var(--blue);">250 ml</span></div>
+          <div class="food-item"><span class="food-name">11:30 AM</span><span class="food-kcal" style="color:var(--blue);">500 ml</span></div>
+          <div class="food-item"><span class="food-name">2:00 PM</span><span class="food-kcal" style="color:var(--blue);">200 ml</span></div>
+          <div class="total-row"><span class="total-lbl">Total today</span><span class="total-val" style="color:var(--blue);">950 ml</span></div>
+          <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+              <span style="font-size:6px;font-weight:600;color:var(--text-2);">Daily water progress</span>
+              <span style="font-size:6px;font-weight:600;color:var(--blue);">45% · 1,150 ml remaining</span>
+            </div>
+            <div style="height:5px;background:#B5D4F4;overflow:hidden;"><div style="height:100%;width:45%;background:var(--blue);"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:5.5px;color:var(--text-3);"><span>950 ml consumed</span><span>Goal: 2,100 ml</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Scrollable · custom input active · quick-add chips still visible below · progress bar at bottom.</div>
+    </div>
+
+    <!-- DESKTOP COLLAPSED -->
+    <div class="mockup-col">
+      <div class="mockup-tag">🖥 Desktop</div>
+      <div class="state-badge collapsed">◀ Collapsed</div>
+      <div class="desktop" style="width:520px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/water</div></div>
+        <div class="d-body">
+          <div class="d-sidebar" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <!-- goal banner -->
+              <div class="d-goal-banner" style="background:#E6F1FB;border:0.5px solid #85B7EB;">
+                <div class="d-gb-lbl" style="color:#0C447C;">TODAY'S WATER GOAL</div>
+                <div class="d-gb-row">
+                  <div class="d-gb-item"><div class="d-gb-num" style="color:var(--blue-dark);">2,100</div><div class="d-gb-sub" style="color:var(--blue-dark);">Target ml</div></div>
+                  <div class="d-gb-div" style="background:#85B7EB;"></div>
+                  <div class="d-gb-item"><div class="d-gb-num" style="color:var(--blue-dark);">950</div><div class="d-gb-sub" style="color:var(--blue-dark);">Consumed</div></div>
+                  <div class="d-gb-div" style="background:#85B7EB;"></div>
+                  <div class="d-gb-item"><div class="d-gb-num" style="color:var(--blue-dark);">1,150</div><div class="d-gb-sub" style="color:var(--blue-dark);">Remaining</div></div>
+                </div>
+              </div>
+              <!-- quick-add cards -->
+              <div class="d-section-h" style="margin-bottom:6px;">Quick add</div>
+              <div class="d-common-grid">
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">100 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">small glass</span></div>
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">200 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">small bottle</span></div>
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">250 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">standard glass</span></div>
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">500 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">large bottle</span></div>
+              </div>
+              <!-- custom input -->
+              <div style="display:flex;gap:8px;align-items:center;margin:8px 0;">
+                <div class="d-input" style="flex:1;border-color:var(--blue-border);background:#E6F1FB;color:var(--blue-dark);font-size:8.5px;">Custom amount (ml)…</div>
+                <div class="d-btn" style="width:80px;margin-top:0;height:20px;font-size:8px;background:var(--blue);">+ Add</div>
+              </div>
+              <!-- today's log -->
+              <div class="d-section-h" style="margin-bottom:4px;">Today's log</div>
+              <div class="d-log-table">
+                <div class="d-log-header" style="grid-template-columns:1fr 100px 24px;"><span>Time</span><span>Amount</span><span></span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 24px;"><span>9:00 AM</span><span style="color:var(--blue);font-weight:500;">250 ml</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 24px;"><span>11:30 AM</span><span style="color:var(--blue);font-weight:500;">500 ml</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 24px;"><span>2:00 PM</span><span style="color:var(--blue);font-weight:500;">200 ml</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-total" style="grid-template-columns:1fr 100px 24px;"><span>Total today</span><span style="color:var(--blue);font-weight:600;">950 ml</span><span></span></div>
+              </div>
+            </div>
+            <!-- footer progress bar -->
+            <div class="d-diet-progress" style="background:transparent;">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title" style="color:var(--blue-dark);">Daily water progress</span><span class="d-prog-pct" style="color:var(--blue);">45% · 1,150 ml remaining · keep drinking 💧</span></div>
+                <div class="d-full-bar" style="background:#B5D4F4;"><div class="d-full-fill" style="width:45%;background:var(--blue);"></div></div>
+                <div class="d-prog-nums" style="color:var(--blue-dark);"><span>0 ml</span><span>Goal: 2,100 ml</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Full-width layout. 4 quick-add cards. Custom input. Log table. Blue progress bar at bottom.</div>
+    </div>
+
+    <!-- DESKTOP EXPANDED -->
+    <div class="mockup-col">
+      <div class="state-badge expanded">▶ Expanded</div>
+      <div class="desktop" style="width:580px;">
+        <div class="desktop-bar"><div class="d-dot r"></div><div class="d-dot y"></div><div class="d-dot g"></div></div>
+        <div class="desktop-browser"><div class="d-url">fittrack.app/water</div></div>
+        <div class="d-body">
+          <div class="d-sidebar open" onclick="toggleSidebar(this)">
+            <div class="d-sidebar-toggle">☰</div>
+            <div class="d-logo"><div class="d-logo-icon">🌿</div><div class="d-logo-name">FitTrack</div></div>
+            <div class="d-nav">
+              <div class="d-nav-item"><span class="d-nav-icon">⌂</span><span class="d-nav-label">Home</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🍎</span><span class="d-nav-label">Diet</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">⚖️</span><span class="d-nav-label">Weight</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">🏃</span><span class="d-nav-label">Exercise</span></div>
+              <div class="d-nav-item active"><span class="d-nav-icon">💧</span><span class="d-nav-label">Water</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">📊</span><span class="d-nav-label">Stats</span></div>
+              <div class="d-nav-item"><span class="d-nav-icon">👤</span><span class="d-nav-label">Profile</span></div>
+            </div>
+          </div>
+          <div class="d-diet-body">
+            <div class="d-diet-main">
+              <div class="d-goal-banner" style="background:#E6F1FB;border:0.5px solid #85B7EB;">
+                <div class="d-gb-lbl" style="color:#0C447C;">TODAY'S WATER GOAL</div>
+                <div class="d-gb-row">
+                  <div class="d-gb-item"><div class="d-gb-num" style="color:var(--blue-dark);">2,100</div><div class="d-gb-sub" style="color:var(--blue-dark);">Target ml</div></div>
+                  <div class="d-gb-div" style="background:#85B7EB;"></div>
+                  <div class="d-gb-item"><div class="d-gb-num" style="color:var(--blue-dark);">950</div><div class="d-gb-sub" style="color:var(--blue-dark);">Consumed</div></div>
+                  <div class="d-gb-div" style="background:#85B7EB;"></div>
+                  <div class="d-gb-item"><div class="d-gb-num" style="color:var(--blue-dark);">1,150</div><div class="d-gb-sub" style="color:var(--blue-dark);">Remaining</div></div>
+                </div>
+              </div>
+              <div class="d-section-h" style="margin-bottom:6px;">Quick add</div>
+              <div class="d-common-grid">
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">100 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">small glass</span></div>
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">200 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">small bottle</span></div>
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">250 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">standard glass</span></div>
+                <div class="d-common-card" style="background:#E6F1FB;border-color:#85B7EB;"><span class="d-cc-emoji">💧</span><span class="d-cc-name" style="color:var(--blue-dark);">500 ml</span><span class="d-cc-kcal" style="color:var(--blue-dark);">large bottle</span></div>
+              </div>
+              <!-- custom input active -->
+              <div style="display:flex;gap:8px;align-items:center;margin:8px 0;">
+                <div class="d-input" style="flex:1;border-color:var(--blue);background:#fff;color:var(--blue-dark);font-size:8.5px;font-weight:500;">
+                  350 ml<span style="display:inline-block;width:1px;height:10px;background:var(--blue);margin-left:2px;vertical-align:middle;"></span>
+                </div>
+                <div class="d-btn" style="width:80px;margin-top:0;height:20px;font-size:8px;background:var(--blue);">+ Add</div>
+              </div>
+              <div class="d-section-h" style="margin-bottom:4px;">Today's log</div>
+              <div class="d-log-table">
+                <div class="d-log-header" style="grid-template-columns:1fr 100px 24px;"><span>Time</span><span>Amount</span><span></span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 24px;"><span>9:00 AM</span><span style="color:var(--blue);font-weight:500;">250 ml</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 24px;"><span>11:30 AM</span><span style="color:var(--blue);font-weight:500;">500 ml</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-row" style="grid-template-columns:1fr 100px 24px;"><span>2:00 PM</span><span style="color:var(--blue);font-weight:500;">200 ml</span><span class="d-log-del">✕</span></div>
+                <div class="d-log-total" style="grid-template-columns:1fr 100px 24px;"><span>Total today</span><span style="color:var(--blue);font-weight:600;">950 ml</span><span></span></div>
+              </div>
+            </div>
+            <div class="d-diet-progress" style="background:transparent;">
+              <div class="d-progress-bar-wrap">
+                <div class="d-prog-lbl-row"><span class="d-prog-title" style="color:var(--blue-dark);">Daily water progress</span><span class="d-prog-pct" style="color:var(--blue);">45% · 1,150 ml remaining · keep drinking 💧</span></div>
+                <div class="d-full-bar" style="background:#B5D4F4;"><div class="d-full-fill" style="width:45%;background:var(--blue);"></div></div>
+                <div class="d-prog-nums" style="color:var(--blue-dark);"><span>0 ml</span><span>Goal: 2,100 ml</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-note">Expanded sidebar. Custom input active state shown. Same layout.</div>
+    </div>
+  </div>
+</section>
+<!-- ════════════════ 10. FORMULAS ════════════════ -->
+<section class="spec-section" id="formulas">
+  <div class="section-header"><div class="section-num">10</div><div class="section-title">Goal Calculation Formulas</div></div>
+  <div class="spec-card">
+    <h3>BMR — Mifflin-St Jeor</h3>
+    <pre><b>Female:</b> BMR = (10 × weight_kg) + (6.25 × height_cm) − (5 × age) − 161
 <b>Male:</b>   BMR = (10 × weight_kg) + (6.25 × height_cm) − (5 × age) + 5
 <b>Other:</b>  Use female formula as default</pre>
-      <h3 style="margin-top:1rem;">TDEE</h3>
-      <pre><b>TDEE</b> = BMR × activity_multiplier</pre>
-      <h3 style="margin-top:1rem;">Daily Calorie Goal</h3>
-      <pre><b>Calorie goal</b> = TDEE − 500</pre>
-      <p class="note">−500 kcal/day produces ~0.5 kg/week loss — the safe, medically recommended rate.</p>
-      <h3 style="margin-top:1rem;">Daily Water Goal</h3>
-      <pre><b>Water goal (ml)</b> = weight_kg × 33</pre>
-      <h3 style="margin-top:1rem;">Progress Percentage</h3>
-      <pre><b>Progress %</b> = Math.round((amount_consumed / daily_goal) × 100)</pre>
-      <p class="note">Always apply <code>Math.round()</code> before rendering to prevent floating-point display artifacts.</p>
-      <p class="note" style="margin-top:0.5rem;">All goals are computed once on Profile Setup save and stored to the user record. Diet Log and Water Log read from the stored values — do not recalculate on every screen render.</p>
-    </div>
-  </section>
+    <h3 style="margin-top:1rem;">TDEE &amp; Calorie Goal</h3>
+    <pre><b>TDEE</b>         = BMR × activity_multiplier
+<b>Calorie goal</b> = TDEE − 500</pre>
+    <p class="note">−500 kcal/day = ~0.5 kg/week loss — safe, medically recommended rate.</p>
+    <h3 style="margin-top:1rem;">Water Goal &amp; Progress</h3>
+    <pre><b>Water goal (ml)</b> = weight_kg × 33
+<b>Progress %</b>      = Math.round((consumed / goal) × 100)</pre>
+    <p class="note">Compute goals once on Profile Setup save. Store to user record. All screens read from the stored value.</p>
+  </div>
+</section>
 
-  <!-- 12. RULES -->
-  <section class="spec-section" id="rules">
-    <div class="section-header">
-      <div class="section-num">12</div>
-      <div class="section-title">Interaction & State Rules</div>
-    </div>
-    <div class="spec-card">
-      <h3>Real-time Updates</h3>
-      <p style="font-size:13px;color:var(--text-2);margin-bottom:0.75rem;">The following must update <strong>immediately</strong> (no reload) when data changes:</p>
-      <ul>
-        <li>Diet goal banner — Target / Consumed / Remaining</li>
-        <li>Diet progress ring — percentage and arc length</li>
-        <li>Water progress ring, arc, and horizontal bar</li>
-        <li>Home Dashboard card values and their progress bars</li>
-        <li>Home hero card "Lost kg" value — on every new weight entry</li>
-      </ul>
-      <h3 style="margin-top:1.2rem;">Progress Ring Animation</h3>
-      <table><thead><tr><th>Trigger</th><th>Animation</th></tr></thead><tbody>
-        <tr><td>Page load</td><td>Arc animates 0% → current value over 600ms, <code>ease-out</code></td></tr>
-        <tr><td>New entry added</td><td>Arc animates current → new value over 300ms, <code>ease-out</code></td></tr>
-      </tbody></table>
-      <h3 style="margin-top:1.2rem;">Color Threshold Logic (shared — Diet &amp; Water rings)</h3>
-      <pre>if progress &lt; 85%   → module primary color (green or blue)
+<!-- ════════════════ 11. RULES ════════════════ -->
+<section class="spec-section" id="rules">
+  <div class="section-header"><div class="section-num">11</div><div class="section-title">Interaction &amp; State Rules</div></div>
+  <div class="spec-card">
+    <h3>Sidebar Toggle Spec</h3>
+    <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Collapsed width</td><td><code>36px</code> — icons only</td></tr>
+      <tr><td>Expanded width</td><td><code>128px</code> — icons + labels</td></tr>
+      <tr><td>Width transition</td><td><code>220ms ease</code></td></tr>
+      <tr><td>Label fade-in</td><td><code>opacity 150ms ease</code>, delay <code>60ms</code></td></tr>
+      <tr><td>Trigger</td><td>Click ☰ button at top of sidebar</td></tr>
+      <tr><td>Persistence</td><td>Save state to <code>localStorage</code> so it survives page reload</td></tr>
+    </tbody></table>
+    <h3 style="margin-top:1.2rem;">Real-time Updates</h3>
+    <ul>
+      <li>Diet goal banner — Target / Consumed / Remaining</li>
+      <li>Diet progress ring — percentage and arc</li>
+      <li>Water ring, arc, and horizontal bar</li>
+      <li>Home Dashboard — all four card values and progress bars</li>
+      <li>Home hero card "Lost kg" — on every new weight entry</li>
+    </ul>
+    <h3 style="margin-top:1.2rem;">Progress Ring Color Thresholds</h3>
+    <pre>if progress &lt; 85%   → module primary color (green or blue)
 if progress &lt; 100%  → amber <b>#BA7517</b>
 if progress >= 100% → red <b>#E24B4A</b>  +  "Goal reached!" badge</pre>
-      <h3 style="margin-top:1.2rem;">Empty States</h3>
-      <table><thead><tr><th>Screen</th><th>Message</th></tr></thead><tbody>
-        <tr><td>Diet Log</td><td>"No food logged today. Tap the search bar to add your first meal."</td></tr>
-        <tr><td>Exercise Log</td><td>"No exercise logged today. Search an activity to get started."</td></tr>
-        <tr><td>Weight Log</td><td>"No weight logged today. Enter your current weight above."</td></tr>
-        <tr><td>Water Log</td><td>Ring at 0%, bar empty, all quick-add buttons active</td></tr>
-      </tbody></table>
-      <h3 style="margin-top:1.2rem;">Data Persistence</h3>
-      <ul>
-        <li>All entries keyed by <code>user_id + ISO date string</code> (e.g. <code>u123_2026-05-17</code>)</li>
-        <li>Home Dashboard always reflects the current calendar day</li>
-        <li>History lists in reverse chronological order (newest first)</li>
-        <li>On new weight entry: update both the weight log <em>and</em> <code>profile.current_weight</code></li>
-      </ul>
-    </div>
-  </section>
+    <h3 style="margin-top:1.2rem;">Mobile vs Desktop Layout</h3>
+    <table><thead><tr><th>Screen</th><th>Mobile</th><th>Desktop</th></tr></thead><tbody>
+      <tr><td>Navigation</td><td>Bottom tab bar (3 items)</td><td>Left sidebar — collapsed (icons, 36px) by default, click ☰ to expand (128px + labels)</td></tr>
+      <tr><td>Login / Setup</td><td>Single column</td><td>Split panel — no sidebar on auth screens</td></tr>
+      <tr><td>Home</td><td>2×2 card grid</td><td>1×4 card row + greeting header</td></tr>
+      <tr><td>Diet / Exercise</td><td>Stacked vertical</td><td>Search+log left, ring right</td></tr>
+      <tr><td>Weight</td><td>Stacked vertical</td><td>Log+history left, progress ring right</td></tr>
+      <tr><td>Water</td><td>Stacked vertical</td><td>Ring+bar left, add buttons+log right</td></tr>
+    </tbody></table>
+    <h3 style="margin-top:1.2rem;">Empty States</h3>
+    <table><thead><tr><th>Screen</th><th>Message</th></tr></thead><tbody>
+      <tr><td>Diet Log</td><td>"No food logged today. Tap the search bar to add your first meal."</td></tr>
+      <tr><td>Exercise Log</td><td>"No exercise logged today. Search an activity to get started."</td></tr>
+      <tr><td>Weight Log</td><td>"No weight logged today. Enter your current weight above."</td></tr>
+      <tr><td>Water Log</td><td>Ring at 0%, bar empty, all quick-add buttons active</td></tr>
+    </tbody></table>
+    <h3 style="margin-top:1.2rem;">Data Persistence</h3>
+    <ul>
+      <li>All entries keyed by <code>user_id + ISO date</code> (e.g. <code>u123_2026-05-17</code>)</li>
+      <li>Home always reflects the current calendar day</li>
+      <li>History lists: reverse chronological, newest first</li>
+      <li>On weight entry save: update log <em>and</em> <code>profile.current_weight</code></li>
+    </ul>
+  </div>
+</section>
 
 </div>
+<footer>FitTrack UI Spec v1.2 &nbsp;·&nbsp; Returning user flow &nbsp;·&nbsp; Mobile + Desktop (Collapsed &amp; Expanded) &nbsp;·&nbsp; For frontend handoff</footer>
 
-<footer>
-  FitTrack UI Spec v1.0 &nbsp;·&nbsp; For frontend handoff &nbsp;·&nbsp; All measurements in px unless noted
-</footer>
-
+<script>
+function toggleSidebar(sidebar) {
+  sidebar.classList.toggle('open');
+  sidebar.style.cursor = sidebar.classList.contains('open') ? 'default' : 'pointer';
+}
+document.addEventListener('click', function(e) {
+  const item = e.target.closest('.d-nav-item');
+  if (item) {
+    const sidebar = item.closest('.d-sidebar');
+    if (sidebar && sidebar.classList.contains('open')) e.stopPropagation();
+  }
+}, true);
+</script>
 </body>
 </html>
